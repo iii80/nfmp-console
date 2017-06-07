@@ -1,0 +1,23 @@
+<nav class="navigation">
+	<div class="brand">转码平台</div>
+	<ul class="list">
+		<li>
+			<a ui-sref="main.channel" ui-sref-active="active" class="item">
+				<i class="fa fa-star fa-fw"></i>
+				频道管理
+			</a>
+		</li>
+		<li>
+			<a ui-sref="main.network" ui-sref-active="active" class="item">
+				<i class="fa fa-cogs fa-fw"></i>
+				网络管理
+			</a>
+		</li>
+	</ul>
+	<div nd-notification ng-show="notificationShow" ng-class="'text-' + type" class="notification">
+		<i ng-if="type === 'success'" class="fa fa-check-circle fa-fw"></i>
+		<i ng-if="type === 'warning'" class="fa fa-warning fa-fw"></i>
+		<i ng-if="type === 'danger'" class="fa fa-times-circle fa-fw"></i>
+		{{message}}
+	</div>
+</nav>

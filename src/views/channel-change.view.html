@@ -1,0 +1,41 @@
+<div class="page-header clearfix">
+    <ol ng-if="action === 'create'" class="heading">
+        <li><a ui-sref="main.channel">频道管理</a></li>
+        <li><a ui-sref="main.channel.create">新增频道</a></li>
+    </ol>
+    <ol ng-if="action === 'update'" class="heading">
+        <li><a ui-sref="main.channel">频道管理</a></li>
+        <li><a ui-sref="main.channel.update({ _id: _id })">更新频道</a></li>
+    </ol>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form ng-submit="saveChannel()" class="form-horizontal" id="channelForm" name="channelForm" novalidate>
+            <div ng-class="{ 'has-error': channelForm.url.$touched && channelForm.url.$invalid }" class="form-group">
+                <label for="url" class="col-sm-2 control-label">* 频道名称：</label>
+                <div class="col-sm-10">
+                    <input ng-model="url" ng-pattern="/^\/\w+$/" ng-disabled="transmitting" class="form-control" id="url" type="text" name="url" placeholder="请输入以 / 开头的频道名称，例如 /channel1" required>
+                    <p ng-show="channelForm.url.$touched && channelForm.url.$invalid" class="help-block">频道名称需为以 / 开头的且为英文的名称</p>
+                </div>
+            </div>
+            <div ng-class="{ 'has-error': channelForm.source.$touched && channelForm.source.$invalid }" class="form-group">
+                <label for="source" class="col-sm-2 control-label">* 源 URL：</label>
+                <div class="col-sm-10">
+                    <input ng-model="source" ng-disabled="transmitting" class="form-control" id="source" type="text" name="source" placeholder="请输入源URL" required>
+                    <!--<div class="checkbox">-->
+                        <!--<label>-->
+                            <!--<input type="checkbox"> 如果源格式为 RTMP，请勾选此项-->
+                        <!--</label>-->
+                    <!--</div>-->
+                </div>
+            </div>
+            <div ng-class="{ 'has-error': channelForm.remark.$touched && channelForm.remark.$invalid }" class="form-group">
+                <label for="remark" class="col-sm-2 control-label">备注：</label>
+                <div class="col-sm-10">
+                    <input ng-model="remark" ng-disabled="transmitting" class="form-control" id="remark" type="text" name="remark" placeholder="请输入备注">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<button ng-disabled="transmitting || inputing || channelForm.$invalid" class="btn btn-primary pull-right" form="channelForm" type="submit"><i class="fa fa-save"></i> 保存频道</button>

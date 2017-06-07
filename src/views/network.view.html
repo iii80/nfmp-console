@@ -1,0 +1,27 @@
+<div ui-view class="view clearfix">
+  <div class="page-header clearfix">
+    <ol class="heading">
+      <li><a ui-sref="main.sites">网络管理</a></li>
+    </ol>
+  </div>
+  <div class="panel panel-default clear-bottom-margin">
+    <div class="panel-body table-responsive">
+      <table class="table table-hover">
+        <thead class="text-center">
+        <tr>
+          <th>设备</th>
+          <th>地址</th>
+          <th>MAC</th>
+        </tr>
+        </thead>
+        <tbody class="text-center text-middle">
+        <tr ng-repeat="item in network">
+          <td>{{item.name}}</td>
+          <td>{{item.address}}</td>
+          <td>{{item.mac}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

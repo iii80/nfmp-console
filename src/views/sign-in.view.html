@@ -1,0 +1,26 @@
+<article class="sign-in">
+  <div ng-class="{ 'shake': animateShake }" class="content">
+    <div class="brand">转码平台</div>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <form ng-submit="signIn()" id="signInForm" name="signInForm" novalidate>
+          <div class="form-group">
+            <label for="password">机器码：</label>
+            <div class="input-group">
+              <span class="input-group-addon" id="inputIconKey"><i class="fa fa-desktop fa-fw"></i></span>
+              <input  class="form-control" id="key" type="text" value="{{key}}" aria-describedby="inputIconKey" required readonly>
+            </div>
+          </div>
+          <div ng-class="{ 'has-error': (signInForm.password.$touched && signInForm.password.$invalid) || wrongPassword }" class="form-group">
+            <label for="password">序列号：</label>
+            <div class="input-group">
+              <span class="input-group-addon" id="inputIconPwd"><i class="fa fa-lock fa-fw"></i></span>
+              <input ng-model="password" ng-minlength="6" ng-disabled="transmitting" class="form-control" id="password" type="text" name="password" placeholder="请输入序列号" aria-describedby="inputIconPwd" required>
+            </div>
+          </div>
+          <button ng-disabled="signInForm.$invalid || transmitting" class="btn btn-primary btn-block" form="signInForm" type="submit">进入</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</article>
