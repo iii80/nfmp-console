@@ -4,8 +4,11 @@
 Thumbs.db
 npm-debug.log
 config/sources.json
+config/key.json
 !.gitkeep
 
 node_modules
 logs/*
 !logs/*/*.gitkeep
+public/*
+!public/*.gitkeep

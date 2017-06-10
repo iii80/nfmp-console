@@ -1,5 +1,27 @@
+<!-- 注销模态 -->
+<div class="modal fade" id="signOutModal" tabindex="-1" role="dialog" aria-labelledby="signOutModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="signOutModalTitle">警告</h4>
+			</div>
+			<div class="modal-body">
+				<h4 class="text-center">您确定要退出登录吗？</h4>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button ng-click="signOut()" type="button" class="btn btn-danger">退出</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <nav class="navigation">
 	<div class="brand">转码平台</div>
+	<div class="account">
+		管理员 <div data-toggle="modal" data-target="#signOutModal" class="sign-out"><i class="fa fa-sign-out"></i></div>
+	</div>
 	<ul class="list">
 		<li>
 			<a ui-sref="main.channel" ui-sref-active="active" class="item">

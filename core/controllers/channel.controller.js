@@ -27,9 +27,13 @@ exports.one = function (req, res) {
   var _id = req.params._id;
 
   fs.readFile(path.join(__dirname,'../../config/sources.json'), function (err, data) {
-    if (err) {
+    if (err && data) {
       logger.system().error(__filename, '获取 SOURCE 失败', err);
       return res.status(400).end();
+    }
+
+    if (!data) {
+      return res.status(200).json([]);
     }
 
     var channel = JSON.parse(data);
@@ -48,9 +52,13 @@ exports.one = function (req, res) {
  */
 exports.list = function (req, res) {
   fs.readFile(path.join(__dirname,'../../config/sources.json'), function (err, data) {
-    if (err) {
+    if (err && data) {
       logger.system().error(__filename, '获取 SOURCE 失败', err);
       return res.status(400).end();
+    }
+
+    if (!data) {
+      return res.status(200).json([]);
     }
 
     var channelList = JSON.parse(data);
@@ -116,28 +124,35 @@ exports.create = function (req, res) {
   }
 
   fs.readFile(path.join(__dirname,'../../config/sources.json'), function (err, data) {
-    if (err) {
+    if (err && data) {
       logger.system().error(__filename, '获取 SOURCE 失败', err);
       return res.status(400).end();
     }
 
-    var channelList = JSON.parse(data);
-    var _id = (Number(_.sortBy(channelList, 'name')[channelList.length - 1].name) + 1) + '';
+    var channelList;
 
-    switch (_id.length) {
-      case 1:
-        _id = '00' + _id;
+    if (!data) {
+      channelList = [];
 
-        break;
-      case 2:
-        _id = '0' + _id;
+      newChannel.name = '001';
+    } else {
+      channelList = JSON.parse(data);
+
+      var _id = (Number(_.sortBy(channelList, 'name')[channelList.length - 1].name) + 1) + '';
+
+      switch (_id.length) {
+        case 1:
+          _id = '00' + _id;
+
+          break;
+        case 2:
+          _id = '0' + _id;
+      }
+
+      newChannel.name = _id;
     }
 
-    newChannel.name = _id;
-
     channelList.push(newChannel);
-
-    console.log(channelList);
 
     fs.writeFile(path.join(__dirname,'../../config/sources.json'), JSON.stringify(channelList), function (err) {
       if (err) {

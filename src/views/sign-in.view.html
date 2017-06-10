@@ -3,22 +3,39 @@
     <div class="brand">转码平台</div>
     <div class="panel panel-default">
       <div class="panel-body">
-        <form ng-submit="signIn()" id="signInForm" name="signInForm" novalidate>
+        <form ng-if="!hasKeyValue" ng-submit="$parent.keyForm()" id="keyForm" name="keyForm" novalidate>
           <div class="form-group">
-            <label for="password">机器码：</label>
+            <label for="keyMac">机器码：</label>
             <div class="input-group">
-              <span class="input-group-addon" id="inputIconKey"><i class="fa fa-desktop fa-fw"></i></span>
-              <input  class="form-control" id="key" type="text" value="{{key}}" aria-describedby="inputIconKey" required readonly>
+              <span class="input-group-addon" id="inputIconKeyMac"><i class="fa fa-desktop fa-fw"></i></span>
+              <input  class="form-control" id="keyMac" type="text" name="keyMac" value="{{keyMac}}" aria-describedby="inputIconKeyMac" required readonly>
             </div>
           </div>
-          <div ng-class="{ 'has-error': (signInForm.password.$touched && signInForm.password.$invalid) || wrongPassword }" class="form-group">
-            <label for="password">序列号：</label>
+          <div ng-class="{ 'has-error': (keyForm.keyValue.$touched && keyForm.keyValue.$invalid) || wrong }" class="form-group">
+            <label for="keyValue">序列号：</label>
             <div class="input-group">
               <span class="input-group-addon" id="inputIconPwd"><i class="fa fa-lock fa-fw"></i></span>
-              <input ng-model="password" ng-minlength="6" ng-disabled="transmitting" class="form-control" id="password" type="text" name="password" placeholder="请输入序列号" aria-describedby="inputIconPwd" required>
+              <input ng-model="$parent.keyValue" ng-minlength="6" ng-disabled="transmitting" class="form-control" id="keyValue" type="text" name="keyValue" placeholder="请输入序列号" aria-describedby="inputIconPwd" required>
             </div>
           </div>
-          <button ng-disabled="signInForm.$invalid || transmitting" class="btn btn-primary btn-block" form="signInForm" type="submit">进入</button>
+          <button ng-disabled="keyForm.$invalid || transmitting" class="btn btn-primary btn-block" form="keyForm" type="submit">授权</button>
+        </form>
+        <form ng-if="hasKeyValue" ng-submit="$parent.signIn()" id="signInForm" name="signInForm" novalidate>
+          <div ng-class="{ 'has-error': (signInForm.username.$touched && signInForm.username.$invalid) || wrong }" class="form-group">
+            <label for="username">账号：</label>
+            <div class="input-group">
+              <span class="input-group-addon" id="inputIconAccount"><i class="fa fa-desktop fa-fw"></i></span>
+              <input ng-model="$parent.username" ng-disabled="transmitting" class="form-control" id="username" type="text" name="username" placeholder="请输入账号" aria-describedby="inputIconUsername" required>
+            </div>
+          </div>
+          <div ng-class="{ 'has-error': (signInForm.password.$touched && signInForm.password.$invalid) || wrong }" class="form-group">
+            <label for="password">密码：</label>
+            <div class="input-group">
+              <span class="input-group-addon" id="inputIconPwd"><i class="fa fa-lock fa-fw"></i></span>
+              <input ng-model="$parent.password" ng-minlength="6" ng-disabled="transmitting" class="form-control" id="password" type="password" name="password" placeholder="请输入密码" aria-describedby="inputIconPwd" required>
+            </div>
+          </div>
+          <button ng-disabled="signInForm.$invalid || transmitting" class="btn btn-primary btn-block" form="signInForm" type="submit">登陆</button>
         </form>
       </div>
     </div>

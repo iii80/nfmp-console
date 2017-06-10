@@ -15,12 +15,15 @@ exports.list = function (req, res) {
   var networkList = [];
 
   _.forEach(network, function (item, key) {
-    var isEth = /^eth.+$/.test(key);
+    _.forEach(item, function (_item, _key) {
+      if (item.length <= 1) {
+        _item.name = key;
+      } else {
+        _item.name = key + '-' + (_key + 1);
+      }
 
-    if (isEth) {
-      item[0].name = key;
-      networkList.push(item[0]);
-    }
+      networkList.push(_item);
+    });
   });
 
   res.status(200).json(networkList);

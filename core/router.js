@@ -12,7 +12,8 @@ module.exports = {
     // 当前用户帐号
     '/account': {
       '/key': {
-        all: 'account.key'
+        get: 'account.keyMac',
+        put: 'account.keyValue'
       },
 
       '/sign-in': {

@@ -8,24 +8,57 @@ angular.module('controllers').controller('signIn', ['$scope', '$timeout', '$stat
     $scope.transmitting = false;
     $scope.password = '';
     $scope.autoSignIn = false;
-    $scope.wrongPassword = false;
-    $scope.key = '';
+    $scope.wrong = false;
+    $scope.hasKeyValue = false;
+    $scope.keyMac = '';
+    $scope.keyValue = '';
+    $scope.username = '';
 
-    function resetPassword () {
-      $scope.wrongPassword = false;
+    function reset () {
+      $scope.wrong = false;
     }
 
-    $scope.$watch('password', resetPassword);
-
     $http.get('/api/account/key')
-        .then(function (res) {
-          $scope.key = res.data;
-        });
+      .then(function (res) {
+        var data = res.data;
+
+        if (data) {
+          $scope.keyMac = data;
+        } else {
+          $scope.hasKeyValue = true;
+        }
+      });
+
+    $scope.$watch(['keyValue', 'account', 'password'], reset, true);
+
+    $scope.keyForm = function () {
+      $scope.transmitting = true;
+
+      $http.put('/api/account/key', {
+        keyValue: $scope.keyValue
+      }).then(function () {
+        $scope.hasKeyValue = true;
+        $scope.transmitting = false;
+      }, function (res) {
+        var data = res.data;
+
+        if (_.get(data, 'error.code')) {
+          $scope.wrong = true;
+        }
+
+        $scope.animateShake = true;
+        $timeout(function () {
+          $scope.animateShake = false;
+          $scope.transmitting = false;
+        }, 600);
+      });
+    };
 
     $scope.signIn = function () {
       $scope.transmitting = true;
 
       $http.put('/api/account/sign-in', {
+        username: $scope.username,
         password: $scope.password
       }).then(function () {
         $state.go('main');
@@ -33,7 +66,7 @@ angular.module('controllers').controller('signIn', ['$scope', '$timeout', '$stat
         var data = res.data;
 
         if (_.get(data, 'error.code')) {
-          $scope.wrongPassword = true;
+          $scope.wrong = true;
         }
 
         $scope.animateShake = true;
