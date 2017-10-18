@@ -7,11 +7,14 @@ var logger = require('../../lib/logger.lib');
 
 var cpuTotal = os.cpus().length;
 
-var data = 'Inter-|   Receive                                                |  Transmit\n face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed\n  eth0: 473301381 1898166    0    0    0     0          0         0 220396218 2351183    0    0    0     0       0          0\n  eth1: 11057048317 53053851    0    2    0     0          0         0 52899513348 50096908    0    0    0     0       0          0\n    lo: 61867025398 91443352    0    0    0     0          0         0 61867025398 91443352    0    0    0     0       0          0\n';
-
 var lastData = {
   transmit: 0,
   receive: 0
+};
+
+var currData = {
+  transmit: 0,
+  receive: 0,
 };
 
 setInterval(function (args) {
@@ -44,21 +47,16 @@ setInterval(function (args) {
     return total + Number(n[9]);
   }, 0);
 
-  var currReceive;
-  var currTransmit;
-
   if (lastData.receive === 0) {
-    currReceive = 0;
-    currTransmit = 0;
+    currData.receive = 0;
+    currData.transmit = 0;
   } else {
-    currReceive = _.round(receive - lastData.receive);
-    currTransmit = _.round(transmit - lastData.transmit);
+    currData.receive = _.round(receive - lastData.receive);
+    currData.transmit = _.round(transmit - lastData.transmit);
   }
 
   lastData.receive = receive;
   lastData.transmit = transmit;
-
-  console.log(currReceive, currTransmit);
 }, 1000);
 
 
@@ -93,16 +91,6 @@ exports.information = function (req, res) {
 
         callback(null, information);
       });
-    },
-    network: function (callback) {
-
-
-      var output = {
-        transmit: transmit / 1024,
-        receive: receive / 1024
-      };
-
-      callback(null, output);
     }
   }, function (err, results) {
     if (err) {
@@ -115,8 +103,8 @@ exports.information = function (req, res) {
     var output = {
       cpu: results.cpuAndMem.cpu,
       mem: results.cpuAndMem.mem,
-      transmit: results.network.transmit,
-      receive: results.network.receive
+      transmit: currData.transmit,
+      receive: currData.receive
     };
 
     res.status(200).json(output);

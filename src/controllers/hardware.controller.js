@@ -20,17 +20,7 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
       ]
     };
 
-
-    var data = {
-      labels : ["January","February","March","April","May","June","July"],
-      datasets : [
-        {
-          data : [65,59,90,81,56,55,40]
-        }
-      ]
-    }
-
-    var chartData = function (number) {
+    var chartTransmitData = function (number) {
       var labels = moment().format('hh:mm:ss');
       var datasets = number;
 
@@ -45,11 +35,58 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
       return transmitData;
     };
 
+    var receiveData = {
+      labels: ['00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00'],
+      datasets: [
+        {
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
+        }
+      ]
+    };
+
+    var chartReceiveData = function (number) {
+      var labels = moment().format('hh:mm:ss');
+      var datasets = number;
+
+      receiveData.labels.push(labels);
+      receiveData.datasets[0].data.push(datasets);
+
+      if (receiveData.labels.length > 50) {
+        receiveData.labels = _.drop(receiveData.labels);
+        receiveData.datasets[0].data = _.drop(receiveData.datasets[0].data);
+      }
+
+      return receiveData;
+    };
+
     $scope.$on('$viewContentLoaded', function(){
       /**
        * 上行带宽图表
        */
       var transmitChart = new Chart($('#transmitChart').get(0).getContext('2d'), {
+        type: 'line',
+        options: {
+          tooltips: {
+            enabled: false
+          },
+          legend: {
+            display: false
+          },
+          elements: {
+            line: {
+              borderWidth: 1
+            }
+          },
+          animation: {
+            duration: 0
+          }
+        }
+      });
+
+      /**
+       * 下行带宽图表
+       */
+      var receiveChart = new Chart($('#transmitChart').get(0).getContext('2d'), {
         type: 'line',
         options: {
           tooltips: {
@@ -80,8 +117,10 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
               $scope.cpu = data.cpu;
               $scope.mem = data.mem;
 
-              transmitChart.data = chartData(data.cpu);
+              transmitChart.data = chartTransmitData(data.transmit);
+              receiveChart.data = chartReceiveData(data.receive);
               transmitChart.update();
+              receiveChart.update();
             });
       }, 1000);
     });
