@@ -18,7 +18,7 @@ setInterval(function (args) {
   var sourceData =  fs.readFileSync('/proc/net/dev').toString();
 
   // 按换行符分割数据转数组
-  var clearN = data.split('\n');
+  var clearN = sourceData.split('\n');
 
   // 去掉表头和空格
   var clearHead = _(clearN).drop(2).initial().value();
