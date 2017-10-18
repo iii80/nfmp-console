@@ -86,7 +86,7 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
       /**
        * 下行带宽图表
        */
-      var receiveChart = new Chart($('#transmitChart').get(0).getContext('2d'), {
+      var receiveChart = new Chart($('#receiveChart').get(0).getContext('2d'), {
         type: 'line',
         options: {
           tooltips: {

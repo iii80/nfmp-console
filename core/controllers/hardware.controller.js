@@ -103,8 +103,8 @@ exports.information = function (req, res) {
     var output = {
       cpu: results.cpuAndMem.cpu,
       mem: results.cpuAndMem.mem,
-      transmit: currData.transmit,
-      receive: currData.receive
+      transmit: currData.transmit / 1024,
+      receive: currData.receive / 1024
     };
 
     res.status(200).json(output);
