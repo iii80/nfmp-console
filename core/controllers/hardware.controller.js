@@ -1,4 +1,5 @@
 var os = require('os');
+var fs = require('fs');
 var ps = require('current-processes');
 var async = require('async');
 var _ = require('lodash');
