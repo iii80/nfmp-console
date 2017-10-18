@@ -45,6 +45,11 @@ module.exports = {
     // 网络
     '/network': {
       get: 'network.list'
+    },
+
+    // 硬件信息
+    '/hardware': {
+      get: 'hardware.information'
     }
   },
 

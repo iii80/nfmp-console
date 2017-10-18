@@ -85,6 +85,15 @@ angular.module('console', [
           return $templateCache.get('network.view.html');
         }]
       })
+
+      // 硬件信息
+      .state('main.hardware', {
+        url: '^/hardware',
+        controller: 'hardware',
+        templateProvider: ['$templateCache', function($templateCache) {
+          return $templateCache.get('hardware.view.html');
+        }]
+      })
   }
 ]).run(['checkSignIn', '$templateCache', function (checkSignIn) {
   // 检查用户是否登录

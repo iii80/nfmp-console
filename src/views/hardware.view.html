@@ -1,0 +1,32 @@
+<div ui-view class="view clearfix">
+  <div class="page-header clearfix">
+    <ol class="heading">
+      <li><a ui-sref="main.sites">硬件信息</a></li>
+    </ol>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">上行带宽</div>
+        <div class="panel-body">
+          <canvas id="transmitChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">硬件使用率</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-4 text-right"><p><b>CPU：</b></p></div>
+            <div class="col-xs-8">{{cpu}}%</div>
+          </div>
+          <div class="row">
+            <div class="col-xs-4 text-right"><p><b>内存：</b></p></div>
+            <div class="col-xs-8">{{mem}}%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
