@@ -44,11 +44,13 @@ setInterval(function (args) {
     return total + Number(n[9]);
   }, 0);
 
-  lastData.receive = (receive - lastData.receive) / 1024;
-  lastData.transmit = (transmit - lastData.transmit) / 1024;
+  var currReceive = _.round(receive - lastData.receive);
+  var currTransmit = _.round(receive - lastData.transmit);
 
-  console.log(lastData);
-  console.log(receive - lastData.receive, transmit - lastData.transmit);
+  lastData.receive = receive;
+  lastData.transmit = transmit;
+
+  console.log(currReceive, currTransmit);
 }, 1000);
 
 
