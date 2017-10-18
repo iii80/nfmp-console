@@ -9,5 +9,5 @@ config/key.json
 
 node_modules
 logs/*/ !.gitkeep
-public/*
-!public/* !.gitkeep
+public/* !.gitkeep
+!public/assets/
