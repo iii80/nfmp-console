@@ -8,7 +8,6 @@ config/key.json
 !.gitkeep
 
 node_modules
-logs/*
-!logs/*/*.gitkeep
+logs/*/ !.gitkeep
 public/*
-!public/*.gitkeep
+!public/* !.gitkeep
