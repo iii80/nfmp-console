@@ -44,8 +44,8 @@ setInterval(function (args) {
     return total + Number(n[9]);
   }, 0);
 
-  lastData.receive = receive - lastData.receive / 1024;
-  lastData.transmit = receive - lastData.transmit / 1024;
+  lastData.receive = (receive - lastData.receive) / 1024;
+  lastData.transmit = (receive - lastData.transmit) / 1024;
 
   console.log(lastData);
 }, 1000);
