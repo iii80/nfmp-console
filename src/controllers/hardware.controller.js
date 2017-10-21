@@ -8,9 +8,11 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
     /**
      * 初始化变量
      */
-    $scope.transmitting = false;
-    $scope.cpu = 0;
-    $scope.mem = 0;
+    $scope.cpuUsage = 0;
+    $scope.cpuTotal = 0;
+    $scope.cpuModel = '';
+    $scope.memUsage = 0;
+    $scope.memTotal = '';
     $scope.chartHeader = [];
     $scope.network = [];
     var data = [];
@@ -135,8 +137,11 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
         .then(function (res) {
           var data = res.data;
 
-          $scope.cpu = data.cpu;
-          $scope.mem = data.mem;
+          $scope.cpuUsage = _.floor(data.cpu.usage / data.cpu.total);
+          $scope.cpuTotal = data.cpu.total;
+          $scope.cpuModel = data.cpu.cpuModel;
+          $scope.memUsage = _.floor(data.mem.usage / data.mem.total);
+          $scope.memTotal = _.floor(data.mem.total);
 
           chartData(data.network);
         });

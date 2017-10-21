@@ -6,6 +6,7 @@ var _ = require('lodash');
 var logger = require('../../lib/logger.lib');
 
 var cpuTotal = os.cpus().length;
+var memTotal = os.totalmem();
 
 var oldListData = [];
 
@@ -84,17 +85,38 @@ exports.information = function (req, res) {
           return false;
         }
 
-        var cpuUsage = _.reduce(_.map(processes, 'cpu'), function (sum, n) {
-          return sum + n;
-        });
+        // var cpuUsage = _.reduce(_.map(processes, 'cpu'), function (sum, n) {
+        //   return sum + n;
+        // });
+        var osCpu = os.cpus();
 
-        var memUsage = _.reduce(_.map(processes, 'mem.usage'), function (sum, n) {
-          return sum + n;
-        });
+        var cpuUsage = _.floor(
+          _.reduce(
+            _.map(osCpu, function (item) {
+              var t = item.times
+              return 100 * (t.user + t.nice + t.sys) / (t.user + t.nice + t.sys + t.idle)
+            }),
+            function (sum, n) {
+              return sum + n;
+            }
+          )
+        );
+
+        // var memUsage = _.reduce(_.map(processes, 'mem.usage'), function (sum, n) {
+        //   return sum + n;
+        // });
 
         var information = {
-          cpu: _.floor(cpuUsage / cpuTotal),
-          mem: _.floor(memUsage)
+          cpu: {
+            usage: cpuUsage,
+            total: cpuTotal,
+            model: osCpu[0].model,
+            number: osCpu.length
+          },
+          mem: {
+            usage: process.memoryUsage().rss,
+            total: memTotal
+          }
         };
 
         callback(null, information);
