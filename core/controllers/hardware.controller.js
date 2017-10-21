@@ -8,8 +8,6 @@ var logger = require('../../lib/logger.lib');
 var cpuTotal = os.cpus().length;
 
 var oldListData = [];
-var oldAllReceive = [];
-var oldAllTransmit = [];
 
 var currData = [];
 
@@ -33,15 +31,16 @@ setInterval(function (args) {
     });
   });
 
-  // 接收的总流量
-  var receive = _.reduce(list, function(total, n) {
-    return total + Number(n[1]);
-  }, 0);
 
-  // 发送的总流量
-  var transmit = _.reduce(list, function(total, n) {
-    return total + Number(n[9]);
-  }, 0);
+  function totalData (type, data) {
+    return _.reduce(data, function(total, n) {
+      if (type === 'receive') {
+        return total + Number(n[1]);
+      } else if (type === 'transmit') {
+        return total + Number(n[9]);
+      }
+    }, 0);
+  }
 
   if (currData.length === 0) {
     currData = _.map(list, function (item) {
@@ -60,8 +59,8 @@ setInterval(function (args) {
 
     currData.unshift({
       name: '全部',
-      receive: _.round((receive - oldAllReceive) / 1024),
-      transmit: _.round((transmit - oldAllTransmit) / 1024)
+      receive: _.round((totalData('receive', list) - totalData('receive', oldListData)) / 1024),
+      transmit: _.round((totalData('transmit', list) - totalData('transmit', oldListData)) / 1024)
     });
   }
 
