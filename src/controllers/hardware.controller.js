@@ -11,6 +11,7 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
     $scope.transmitting = false;
     $scope.cpu = 0;
     $scope.mem = 0;
+    $scope.network = [];
     var transmitData = {
       labels: ['00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00'],
       datasets: [
@@ -110,17 +111,18 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
        * 读取硬件信息
        */
       $interval(function () {
-        $http.get('/api/hardware')
+        $http.get('http://nodercms.com:3000/api/hardware')
             .then(function (res) {
               var data = res.data;
 
               $scope.cpu = data.cpu;
               $scope.mem = data.mem;
+              $scope.network = data.network;
 
-              transmitChart.data = chartTransmitData(data.transmit);
-              receiveChart.data = chartReceiveData(data.receive);
-              transmitChart.update();
-              receiveChart.update();
+              // transmitChart.data = chartTransmitData(data.transmit);
+              // receiveChart.data = chartReceiveData(data.receive);
+              // transmitChart.update();
+              // receiveChart.update();
             });
       }, 1000);
     });

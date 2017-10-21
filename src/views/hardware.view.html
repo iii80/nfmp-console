@@ -6,6 +6,20 @@
   </div>
   <div class="row">
     <div class="col-md-8">
+      <ul class="nav nav-pills">
+        <li role="presentation" class="active"><a href="#">Home</a></li>
+        <li role="presentation"><a href="#">Profile</a></li>
+        <li role="presentation"><a href="#">Messages</a></li>
+      </ul>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <ul class="nav nav-pills">
+            <li ng-repeat="item in network" class="{{ item.name === '全部' && 'active' }}" role="presentation"><a href="#">Profile</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
       <div class="panel panel-default">
         <div class="panel-heading">上行带宽 kb/s</div>
         <div class="panel-body">
