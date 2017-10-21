@@ -6,7 +6,7 @@ var _ = require('lodash');
 var logger = require('../../lib/logger.lib');
 
 var memTotal = os.totalmem();
-var memUsage = (memTotal - os.freemem()) / memTotal;
+var memUsage = memTotal - os.freemem();
 
 var oldListData = [];
 
