@@ -51,7 +51,7 @@ setInterval(function (args) {
   } else {
     currData = _.map(list, function (item, index) {
       return {
-        name: '网卡' + item[0].replace(':'),
+        name: '网卡' + item[0].replace(/:/, ''),
         receive:  _.round((Number(item[1]) - Number(oldListData[index][1])) / 1024),
         transmit:  _.round((Number(item[9]) - Number(oldListData[index][9])) / 1024)
       };
