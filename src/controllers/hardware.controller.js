@@ -140,7 +140,7 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
           $scope.cpuUsage = _.floor(data.cpu.usage);
           $scope.cpuAmount = data.cpu.amount;
           $scope.cpuModel = data.cpu.model;
-          $scope.memUsage = _.floor(data.mem.usage / data.mem.total);
+          $scope.memUsage = _.floor(data.mem.usage / data.mem.total * 100);
           $scope.memTotal = _.floor(data.mem.total);
 
           chartData(data.network);
