@@ -93,7 +93,7 @@ exports.information = function (req, res) {
         });
 
         var information = {
-          cpu: _.floor(cpuUsage / cpuTotal),
+          cpu: _.floor(cpuUsage / 100 / cpuTotal),
           mem: _.floor(memUsage)
         };
 
