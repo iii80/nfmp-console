@@ -137,9 +137,9 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
         .then(function (res) {
           var data = res.data;
 
-          $scope.cpuUsage = _.floor(data.cpu.usage / data.cpu.total);
-          $scope.cpuTotal = data.cpu.total;
-          $scope.cpuModel = data.cpu.cpuModel;
+          $scope.cpuUsage = _.floor(data.cpu.usage);
+          $scope.cpuAmount = data.cpu.amount;
+          $scope.cpuModel = data.cpu.model;
           $scope.memUsage = _.floor(data.mem.usage / data.mem.total);
           $scope.memTotal = _.floor(data.mem.total);
 

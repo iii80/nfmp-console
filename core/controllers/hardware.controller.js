@@ -5,7 +5,6 @@ var async = require('async');
 var _ = require('lodash');
 var logger = require('../../lib/logger.lib');
 
-var cpuTotal = os.cpus().length;
 var memTotal = os.totalmem();
 
 var oldListData = [];
@@ -109,9 +108,8 @@ exports.information = function (req, res) {
         var information = {
           cpu: {
             usage: cpuUsage,
-            total: cpuTotal,
             model: osCpu[0].model,
-            number: osCpu.length
+            amount: osCpu.length
           },
           mem: {
             usage: process.memoryUsage().rss,
