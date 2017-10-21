@@ -6,6 +6,7 @@ var _ = require('lodash');
 var logger = require('../../lib/logger.lib');
 
 var memTotal = os.totalmem();
+var memUsage = (memTotal - os.freemem()) / memTotal;
 
 var oldListData = [];
 
@@ -84,22 +85,22 @@ exports.information = function (req, res) {
           return false;
         }
 
-        // var cpuUsage = _.reduce(_.map(processes, 'cpu'), function (sum, n) {
-        //   return sum + n;
-        // });
-        var osCpu = os.cpus();
-
-        var cpuUsage = _.floor(
-          _.reduce(
-            _.map(osCpu, function (item) {
-              var t = item.times
-              return 100 * (t.user + t.nice + t.sys) / (t.user + t.nice + t.sys + t.idle)
-            }),
-            function (sum, n) {
-              return sum + n;
-            }
-          )
-        );
+        var cpuUsage = _.reduce(_.map(processes, 'cpu'), function (sum, n) {
+          return sum + n;
+        });
+        // var osCpu = os.cpus();
+        //
+        // var cpuUsage = _.floor(
+        //   _.reduce(
+        //     _.map(osCpu, function (item) {
+        //       var t = item.times
+        //       return 100 * (t.user + t.nice + t.sys) / (t.user + t.nice + t.sys + t.idle)
+        //     }),
+        //     function (sum, n) {
+        //       return sum + n;
+        //     }
+        //   )
+        // );
 
         // var memUsage = _.reduce(_.map(processes, 'mem.usage'), function (sum, n) {
         //   return sum + n;
@@ -112,7 +113,7 @@ exports.information = function (req, res) {
             amount: osCpu.length
           },
           mem: {
-            usage: process.memoryUsage().rss,
+            usage: memUsage,
             total: memTotal
           }
         };
