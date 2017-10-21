@@ -50,7 +50,7 @@ setInterval(function (args) {
       return { name: item[0], receive: 0, transmit: 0 };
     });
 
-    currData.all = { name: '全部', receive: 0, transmit: 0 };
+    currData.push({ name: '全部', receive: 0, transmit: 0 });
   } else {
     currData = _.map(list, function (item, index) {
       return {
@@ -60,11 +60,11 @@ setInterval(function (args) {
       };
     });
 
-    currData.all = {
+    currData.push({
       name: '全部',
       receive: _.round(receive - oldAllReceive),
       transmit: _.round(transmit - oldAllTransmit)
-    }
+    });
   }
 
   console.log(currData);
