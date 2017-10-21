@@ -33,8 +33,6 @@ setInterval(function (args) {
     });
   });
 
-  oldListData = list;
-
   // 接收的总流量
   var receive = _.reduce(list, function(total, n) {
     return total + Number(n[1]);
@@ -66,6 +64,8 @@ setInterval(function (args) {
       transmit: _.round((transmit - oldAllTransmit) / 1024)
     });
   }
+
+  oldListData = list;
 
   console.log(currData);
 }, 1000);
