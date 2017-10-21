@@ -12,118 +12,126 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
     $scope.cpu = 0;
     $scope.mem = 0;
     $scope.network = [];
-    var transmitData = {
-      labels: ['00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00'],
-      datasets: [
-        {
-          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
-        }
-      ]
-    };
+    $scope.data = [];
+    $scope.chart = [];
+    $scope.select = 0;
+    var chartFlag = false;
 
-    var chartTransmitData = function (number) {
-      var labels = moment().format('hh:mm:ss');
-      var datasets = number;
+    function chart () {
+      if (!$scope.data[0]) {
+        $scope.data = _.map($scope.network, function (item) {
+          return {
+            transmit: {
+              labels: ['00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00'],
+              datasets: [
+                {
+                  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
+                }
+              ]
+            },
+            receive: {
+              labels: ['00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00'],
+              datasets: [
+                {
+                  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
+                }
+              ]
+            }
+          }
+        });
+      } else {
+        var labels = moment().format('hh:mm:ss');
+        var datasets = number;
 
-      transmitData.labels.push(labels);
-      transmitData.datasets[0].data.push(datasets);
+        _.map($scope.network, function (item, index) {
+          var data = $scope.data[index];
 
-      if (transmitData.labels.length > 50) {
-        transmitData.labels = _.drop(transmitData.labels);
-        transmitData.datasets[0].data = _.drop(transmitData.datasets[0].data);
+          data.transmit.labels.push(labels);
+          data.receive.labels.push(labels);
+          data.transmit.datasets.data.push(item.transmit);
+          data.receive.datasets.data.push(item.receive);
+
+          if (data.transmit.length > 50) {
+            data.transmit.labels = _.drop(data.transmit.labels);
+            data.receive.datasets[0].data = _.drop(data.receive.datasets[0].data);
+            data.transmit.labels = _.drop(data.transmit.labels);
+            data.receive.datasets[0].data = _.drop(data.receive.datasets[0].data);
+          }
+        })
       }
+    }
 
-      return transmitData;
-    };
+    function chartInit () {
+      chartFlag = true;
 
-    var receiveData = {
-      labels: ['00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00'],
-      datasets: [
-        {
-          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
+      _.map($scope.network, function (item, index) {
+        $scope.chart[index] = {
+          transmit: new Chart($('#transmitChart' + index).get(0).getContext('2d'), {
+            type: 'line',
+            options: {
+              tooltips: {
+                enabled: false
+              },
+              legend: {
+                display: false
+              },
+              elements: {
+                line: {
+                  borderWidth: 1
+                }
+              },
+              animation: {
+                duration: 0
+              }
+            }
+          }),
+          receive: new Chart($('#receiveChart' + index).get(0).getContext('2d'), {
+            type: 'line',
+            options: {
+              tooltips: {
+                enabled: false
+              },
+              legend: {
+                display: false
+              },
+              elements: {
+                line: {
+                  borderWidth: 1
+                }
+              },
+              animation: {
+                duration: 0
+              }
+            }
+          })
         }
-      ]
-    };
+      });
+    }
 
-    var chartReceiveData = function (number) {
-      var labels = moment().format('hh:mm:ss');
-      var datasets = number;
-
-      receiveData.labels.push(labels);
-      receiveData.datasets[0].data.push(datasets);
-
-      if (receiveData.labels.length > 50) {
-        receiveData.labels = _.drop(receiveData.labels);
-        receiveData.datasets[0].data = _.drop(receiveData.datasets[0].data);
-      }
-
-      return receiveData;
-    };
+    function updateChart() {
+      _.map($scope.network, function (item, index) {
+        $scope.chart[index].transmit.update();
+        $scope.chart[index].receive.update();
+      });
+    }
 
     $scope.$on('$viewContentLoaded', function(){
-      /**
-       * 上行带宽图表
-       */
-      var transmitChart = new Chart($('#transmitChart').get(0).getContext('2d'), {
-        type: 'line',
-        options: {
-          tooltips: {
-            enabled: false
-          },
-          legend: {
-            display: false
-          },
-          elements: {
-            line: {
-              borderWidth: 1
-            }
-          },
-          animation: {
-            duration: 0
-          }
-        }
-      });
-
-      /**
-       * 下行带宽图表
-       */
-      var receiveChart = new Chart($('#receiveChart').get(0).getContext('2d'), {
-        type: 'line',
-        options: {
-          tooltips: {
-            enabled: false
-          },
-          legend: {
-            display: false
-          },
-          elements: {
-            line: {
-              borderWidth: 1
-            }
-          },
-          animation: {
-            duration: 0
-          }
-        }
-      });
-
       /**
        * 读取硬件信息
        */
       $interval(function () {
-        $http.get('http://nodercms.com:3000/api/hardware')
-            .then(function (res) {
-              var data = res.data;
+        $http.get('/api/hardware')
+          .then(function (res) {
+            var data = res.data;
 
-              $scope.cpu = data.cpu;
-              $scope.mem = data.mem;
-              $scope.network = data.network;
+            $scope.cpu = data.cpu;
+            $scope.mem = data.mem;
+            $scope.network = data.network;
 
-              // transmitChart.data = chartTransmitData(data.transmit);
-              // receiveChart.data = chartReceiveData(data.receive);
-              // transmitChart.update();
-              // receiveChart.update();
-            });
+            if (!chartFlag) chartInit();
+
+            updateChart();
+          });
       }, 1000);
     });
 

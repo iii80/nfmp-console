@@ -6,32 +6,25 @@
   </div>
   <div class="row">
     <div class="col-md-8">
-      <ul class="nav nav-pills">
-        <li role="presentation" class="active"><a href="#">Home</a></li>
-        <li role="presentation"><a href="#">Profile</a></li>
-        <li role="presentation"><a href="#">Messages</a></li>
-      </ul>
       <div class="panel panel-default">
         <div class="panel-body">
           <ul class="nav nav-pills">
-            <li ng-repeat="item in network" class="{{ item.name === '全部' && 'active' }}" role="presentation"><a href="#">Profile</a></li>
+            <li ng-repeat="item in network" ng-class="select === $index && 'active'" role="presentation"><a ng-click="select === $index">{{item.name}}</a></li>
           </ul>
         </div>
       </div>
-    </div>
-    <div class="col-md-8">
-      <div class="panel panel-default">
+      <div ng-show="select === $index" ng-repeat="item in network" class="panel panel-default">
         <div class="panel-heading">上行带宽 kb/s</div>
         <div class="panel-body">
-          <canvas id="transmitChart"></canvas>
+          <canvas id="transmitChart{{$index}}"></canvas>
         </div>
       </div>
-      <div class="panel panel-default">
-      <div class="panel-heading">下行带宽 kb/s</div>
-      <div class="panel-body">
-        <canvas id="receiveChart"></canvas>
+      <div ng-show="select === $index" ng-repeat="item in network" class="panel panel-default">
+        <div class="panel-heading">下行带宽 kb/s</div>
+        <div class="panel-body">
+          <canvas id="receiveChart{{$index}}"></canvas>
+        </div>
       </div>
-    </div>
     </div>
     <div class="col-md-4">
       <div class="panel panel-default">
