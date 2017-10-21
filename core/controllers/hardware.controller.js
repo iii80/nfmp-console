@@ -88,7 +88,7 @@ exports.information = function (req, res) {
         var cpuUsage = _.reduce(_.map(processes, 'cpu'), function (sum, n) {
           return sum + n;
         });
-        // var osCpu = os.cpus();
+        var osCpu = os.cpus();
         //
         // var cpuUsage = _.floor(
         //   _.reduce(
