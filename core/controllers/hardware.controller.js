@@ -52,15 +52,15 @@ setInterval(function (args) {
     currData = _.map(list, function (item, index) {
       return {
         name: '网卡' + item[0].replace(/:/, ''),
-        receive:  _.round((Number(item[1]) - Number(oldListData[index][1])) / 1024),
-        transmit:  _.round((Number(item[9]) - Number(oldListData[index][9])) / 1024)
+        receive:  _.floor((Number(item[1]) - Number(oldListData[index][1])) / 1024),
+        transmit:  _.floor((Number(item[9]) - Number(oldListData[index][9])) / 1024)
       };
     });
 
     currData.unshift({
       name: '全部网卡',
-      receive: _.round((totalData('receive', list) - totalData('receive', oldListData)) / 1024),
-      transmit: _.round((totalData('transmit', list) - totalData('transmit', oldListData)) / 1024)
+      receive: _.floor((totalData('receive', list) - totalData('receive', oldListData)) / 1024),
+      transmit: _.floor((totalData('transmit', list) - totalData('transmit', oldListData)) / 1024)
     });
   }
 
@@ -93,8 +93,8 @@ exports.information = function (req, res) {
         });
 
         var information = {
-          cpu: _.round(cpuUsage / cpuTotal),
-          mem: _.round(memUsage)
+          cpu: _.floor(cpuUsage / cpuTotal),
+          mem: _.floor(memUsage)
         };
 
         callback(null, information);
