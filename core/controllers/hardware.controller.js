@@ -52,8 +52,8 @@ setInterval(function (args) {
     currData = _.map(list, function (item, index) {
       return {
         name: '网卡' + item[0].replace(/:/, ''),
-        receive:  _.floor((Number(item[1]) - Number(oldListData[index][1])) / 1024),
-        transmit:  _.floor((Number(item[9]) - Number(oldListData[index][9])) / 1024)
+        receive:  _.floor((Number(item[1]) - Number(oldListData[index][1])) * 8 / 1024),
+        transmit:  _.floor((Number(item[9]) - Number(oldListData[index][9])) * 8 / 1024)
       };
     });
 
@@ -93,7 +93,7 @@ exports.information = function (req, res) {
         });
 
         var information = {
-          cpu: _.floor(cpuUsage / 100 / cpuTotal),
+          cpu: _.floor(cpuUsage / cpuTotal),
           mem: _.floor(memUsage)
         };
 
