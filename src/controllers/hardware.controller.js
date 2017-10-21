@@ -11,15 +11,63 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
     $scope.transmitting = false;
     $scope.cpu = 0;
     $scope.mem = 0;
+    $scope.chartHeader = [];
     $scope.network = [];
-    $scope.data = [];
-    $scope.chart = [];
+    var data = [];
+    var chart = [];
     $scope.select = 0;
     var chartFlag = false;
+    var transmitChart;
+    var receiveChart;
 
-    function chart () {
-      if (!$scope.data[0]) {
-        $scope.data = _.map($scope.network, function (item) {
+
+    function chartInit() {
+      transmitChart = new Chart($('#transmitChart').get(0).getContext('2d'), {
+        type: 'line',
+        options: {
+          tooltips: {
+            enabled: false
+          },
+          legend: {
+            display: false
+          },
+          elements: {
+            line: {
+              borderWidth: 1
+            }
+          },
+          animation: {
+            duration: 0
+          }
+        }
+      });
+
+      receiveChart = new Chart($('#receiveChart').get(0).getContext('2d'), {
+        type: 'line',
+        options: {
+          tooltips: {
+            enabled: false
+          },
+          legend: {
+            display: false
+          },
+          elements: {
+            line: {
+              borderWidth: 1
+            }
+          },
+          animation: {
+            duration: 0
+          }
+        }
+      });
+    }
+
+    function chartData (network) {
+      if (!data[0]) {
+        data = _.map(network, function (item, index) {
+          $scope.chartHeader[index] = item.name;
+
           return {
             transmit: {
               labels: ['00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00', '00:00:00'],
@@ -41,106 +89,57 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
         });
       } else {
         var labels = moment().format('hh:mm:ss');
-        var datasets = number;
 
-        _.map($scope.network, function (item, index) {
-          var data = $scope.data[index];
+        _.map(data, function (item, index) {
+          item.transmit.labels.push(labels);
+          item.transmit.labels.shift();
 
-          data.transmit.labels.push(labels);
-          data.receive.labels.push(labels);
-          data.transmit.datasets.data.push(item.transmit);
-          data.receive.datasets.data.push(item.receive);
+          item.transmit.datasets[0].data.push(network[index].transmit);
+          item.transmit.datasets[0].data.shift();
 
-          if (data.transmit.length > 50) {
-            data.transmit.labels = _.drop(data.transmit.labels);
-            data.receive.datasets[0].data = _.drop(data.receive.datasets[0].data);
-            data.transmit.labels = _.drop(data.transmit.labels);
-            data.receive.datasets[0].data = _.drop(data.receive.datasets[0].data);
-          }
-        })
+          item.receive.labels.push(labels);
+          item.receive.labels.shift();
+
+          item.receive.datasets[0].data.push(network[index].receive);
+          item.receive.datasets[0].data.shift();
+        });
+
+        $scope.updateChart();
       }
     }
 
-    function chartInit () {
-      chartFlag = true;
+    $scope.updateChart = function (index) {
+      if (typeof index === 'number') {
+        $scope.select = index;
+      }
 
-      _.map($scope.network, function (item, index) {
-        $scope.chart[index] = {
-          transmit: new Chart($('#transmitChart' + index).get(0).getContext('2d'), {
-            type: 'line',
-            options: {
-              tooltips: {
-                enabled: false
-              },
-              legend: {
-                display: false
-              },
-              elements: {
-                line: {
-                  borderWidth: 1
-                }
-              },
-              animation: {
-                duration: 0
-              }
-            }
-          }),
-          receive: new Chart($('#receiveChart' + index).get(0).getContext('2d'), {
-            type: 'line',
-            options: {
-              tooltips: {
-                enabled: false
-              },
-              legend: {
-                display: false
-              },
-              elements: {
-                line: {
-                  borderWidth: 1
-                }
-              },
-              animation: {
-                duration: 0
-              }
-            }
-          })
-        }
-      });
-    }
-
-    function updateChart() {
-      _.map($scope.network, function (item, index) {
-        $scope.chart[index].transmit.update();
-        $scope.chart[index].receive.update();
-      });
-    }
+      transmitChart.data = data[$scope.select].transmit;
+      receiveChart.data = data[$scope.select].receive;
+      transmitChart.update();
+      receiveChart.update();
+    };
 
     $scope.$on('$viewContentLoaded', function(){
-      /**
-       * 读取硬件信息
-       */
-      $interval(function () {
-        $http.get('/api/hardware')
-          .then(function (res) {
-            var data = res.data;
+      if (chartFlag) return false;
 
-            $scope.cpu = data.cpu;
-            $scope.mem = data.mem;
-            $scope.network = data.network;
+      chartInit();
 
-            if (!chartFlag) chartInit();
-
-            updateChart();
-          });
-      }, 1000);
+      chartFlag = true;
     });
 
+    /**
+     * 读取硬件信息
+     */
+    $interval(function () {
+      $http.get('/api/hardware')
+        .then(function (res) {
+          var data = res.data;
 
+          $scope.cpu = data.cpu;
+          $scope.mem = data.mem;
 
-
-
-
-
-
+          chartData(data.network);
+        });
+    }, 1000);
   }
 ]);

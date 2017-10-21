@@ -47,18 +47,18 @@ setInterval(function (args) {
       return { name: item[0], receive: 0, transmit: 0 };
     });
 
-    currData.unshift({ name: '全部', receive: 0, transmit: 0 });
+    currData.unshift({ name: '全部网卡', receive: 0, transmit: 0 });
   } else {
     currData = _.map(list, function (item, index) {
       return {
-        name: item[0],
+        name: '网卡' + item[0].replace(':'),
         receive:  _.round((Number(item[1]) - Number(oldListData[index][1])) / 1024),
         transmit:  _.round((Number(item[9]) - Number(oldListData[index][9])) / 1024)
       };
     });
 
     currData.unshift({
-      name: '全部',
+      name: '全部网卡',
       receive: _.round((totalData('receive', list) - totalData('receive', oldListData)) / 1024),
       transmit: _.round((totalData('transmit', list) - totalData('transmit', oldListData)) / 1024)
     });
