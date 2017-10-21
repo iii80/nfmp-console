@@ -7,15 +7,11 @@ var logger = require('../../lib/logger.lib');
 
 var cpuTotal = os.cpus().length;
 
-var lastData = {
-  transmit: 0,
-  receive: 0
-};
+var oldListData = [];
+var oldAllReceive = [];
+var oldAllTransmit = [];
 
-var currData = {
-  transmit: 0,
-  receive: 0,
-};
+var currData = [];
 
 setInterval(function (args) {
   var sourceData =  fs.readFileSync('/proc/net/dev').toString();
@@ -37,6 +33,8 @@ setInterval(function (args) {
     });
   });
 
+  oldListData = list;
+
   // 接收的总流量
   var receive = _.reduce(list, function(total, n) {
     return total + Number(n[1]);
@@ -47,16 +45,29 @@ setInterval(function (args) {
     return total + Number(n[9]);
   }, 0);
 
-  if (lastData.receive === 0) {
-    currData.receive = 0;
-    currData.transmit = 0;
+  if (currData.length === 0) {
+    currData = _.map(list, function (item) {
+      return { name: item[0], receive: 0, transmit: 0 };
+    });
+
+    currData.all = { name: '全部', receive: 0, transmit: 0 };
   } else {
-    currData.receive = _.round(receive - lastData.receive);
-    currData.transmit = _.round(transmit - lastData.transmit);
+    currData = _.map(list, function (item, index) {
+      return {
+        name: item[0],
+        receive: Number(item[1]) - oldListData[index][1],
+        transmit: Number(item[9]) - oldListData[index][9]
+      };
+    });
+
+    currData.all = {
+      name: '全部',
+      receive: _.round(receive - oldAllReceive),
+      transmit: _.round(transmit - oldAllTransmit)
+    }
   }
 
-  lastData.receive = receive;
-  lastData.transmit = transmit;
+  console.log(currData);
 }, 1000);
 
 
