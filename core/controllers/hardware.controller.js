@@ -50,20 +50,20 @@ setInterval(function (args) {
       return { name: item[0], receive: 0, transmit: 0 };
     });
 
-    currData.push({ name: '全部', receive: 0, transmit: 0 });
+    currData.unshift({ name: '全部', receive: 0, transmit: 0 });
   } else {
     currData = _.map(list, function (item, index) {
       return {
         name: item[0],
-        receive: Number(item[1]) - oldListData[index][1],
-        transmit: Number(item[9]) - oldListData[index][9]
+        receive:  _.round(Number(item[1]) - Number(oldListData[index][1]) / 1024),
+        transmit:  _.round(Number(item[9]) - Number(oldListData[index][9]) / 1024)
       };
     });
 
-    currData.push({
+    currData.unshift({
       name: '全部',
-      receive: _.round(receive - oldAllReceive),
-      transmit: _.round(transmit - oldAllTransmit)
+      receive: _.round((receive - oldAllReceive) / 1024),
+      transmit: _.round((transmit - oldAllTransmit) / 1024)
     });
   }
 
