@@ -83,7 +83,7 @@ exports.information = function (req, res) {
 
         var information = {
           cpu: {
-            usage: cpuUsage,
+            usage: cpuUsage * 100,
             model: osCpu[0].model,
             amount: osCpu.length
           },
