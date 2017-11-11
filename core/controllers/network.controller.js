@@ -81,8 +81,7 @@ exports.list = function (req, res) {
   });
 
   networkSource = _.map(networkSource, function (item) {
-    console.log(networkActive);
-    if (_.find(networkActive, item.name)) {
+    if (_.includes(networkActive, item.name)) {
       item.active = true;
     } else {
       item.active = false;
