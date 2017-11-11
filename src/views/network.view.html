@@ -11,19 +11,19 @@
           <div ng-class="{ 'has-error': networkForm.address.$touched && networkForm.address.$invalid }" class="form-group">
             <label for="address" class="col-sm-2 control-label">* 网络地址：</label>
             <div class="col-sm-10">
-              <input ng-model="networkConfig.address" ng-pattern="/^(?:(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:1[0-9][0-9]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:2[0-5][0-5])|(?:25[0-5])|(?:1[0-9][0-9])|(?:[1-9][0-9])|(?:[0-9]))$/" type="text" class="form-control" id="address" name="address" placeholder="请输入IP地址" required>
+              <input ng-model="networkConfig.address" ng-pattern="/^((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$/" type="text" class="form-control" id="address" name="address" placeholder="请输入IP地址" required>
             </div>
           </div>
           <div ng-class="{ 'has-error': networkForm.netmask.$touched && networkForm.netmask.$invalid }" class="form-group">
             <label for="netmask" class="col-sm-2 control-label">* 子网掩码：</label>
             <div class="col-sm-10">
-              <input ng-model="networkConfig.netmask" ng-pattern="/^(?:(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:1[0-9][0-9]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:2[0-5][0-5])|(?:25[0-5])|(?:1[0-9][0-9])|(?:[1-9][0-9])|(?:[0-9]))$/" type="text" class="form-control" id="netmask" name="netmask" placeholder="请输入子网掩码地址" required>
+              <input ng-model="networkConfig.netmask" ng-pattern="/^((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$/" type="text" class="form-control" id="netmask" name="netmask" placeholder="请输入子网掩码地址" required>
             </div>
           </div>
           <div ng-if="networkConfig.name !== 'lo'" ng-class="{ 'has-error': networkForm.gw.$touched && networkForm.gw.$invalid }" class="form-group">
             <label for="gw" class="col-sm-2 control-label">* 网关地址：</label>
             <div class="col-sm-10">
-              <input ng-model="$parent.networkConfig.gw" ng-pattern="/^(?:(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:1[0-9][0-9]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:2[0-5][0-5])|(?:25[0-5])|(?:1[0-9][0-9])|(?:[1-9][0-9])|(?:[0-9]))$/" type="text" class="form-control" id="gw" name="gw" placeholder="请输入网关地址" required>
+              <input ng-model="$parent.networkConfig.gw" ng-pattern="/^((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$/" type="text" class="form-control" id="gw" name="gw" placeholder="请输入网关地址" required>
             </div>
           </div>
         </form>
