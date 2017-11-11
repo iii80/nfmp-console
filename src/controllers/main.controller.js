@@ -6,7 +6,7 @@ angular.module('controllers').controller('main', ['$scope', '$state',
     'use strict';
 
     if ($state.current.name === 'main') {
-      $state.go('main.channel');
+      $state.go('main.hardware');
     }
   }
 ]);

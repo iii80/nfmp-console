@@ -26,9 +26,9 @@ module.exports = {
     },
 
     // 检查是否登录
-    // '/*': {
-    //   all: 'account.check'
-    // },
+    '/*': {
+      all: 'account.check'
+    },
 
     // 频道
     '/channel': {
@@ -44,7 +44,11 @@ module.exports = {
 
     // 网络
     '/network': {
-      get: 'network.list'
+      get: 'network.list',
+
+      '/:network': {
+        put: 'network.change'
+      }
     },
 
     // 硬件信息

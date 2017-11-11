@@ -28,7 +28,7 @@ angular.module('console', [
     $locationProvider.html5Mode(true);
 
     // 将所有未匹配路由转至根目录
-    $urlRouterProvider.otherwise(function ($injector) { $injector.get('$state').go('main.channel') });
+    $urlRouterProvider.otherwise(function ($injector) { $injector.get('$state').go('main.hardware') });
 
     // 路由
     $stateProvider
