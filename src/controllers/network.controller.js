@@ -71,6 +71,8 @@ angular.module('controllers').controller('network', ['$scope', '$state', '$state
         .then(function () {
           reload();
         });
+
+      $('#networkModal').modal('hide');
     };
   }
 ]);
