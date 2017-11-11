@@ -12,8 +12,8 @@ angular.module('controllers').controller('network', ['$scope', '$state', '$state
     $scope.network = [];
     $scope.networkConfig = {
       address: '',
-      netmask: '',
-      gw: ''
+      netmask: ''
+      // gw: ''
     };
 
     /**
@@ -51,8 +51,8 @@ angular.module('controllers').controller('network', ['$scope', '$state', '$state
       $scope.networkConfig = {
         name: item.name,
         address: item.address,
-        netmask: item.netmask,
-        gw: item.gw
+        netmask: item.netmask
+        // gw: item.gw
       };
 
       $('#networkModal').modal('show');
@@ -63,8 +63,8 @@ angular.module('controllers').controller('network', ['$scope', '$state', '$state
     $scope.saveNetworkConfig = function () {
       var data = {
         address: $scope.networkConfig.address,
-        netmask: $scope.networkConfig.netmask,
-        gw: $scope.networkConfig.gw
+        netmask: $scope.networkConfig.netmask
+        // gw: $scope.networkConfig.gw
       };
 
       $http.put('/api/network/' + $scope.networkConfig.name, data)

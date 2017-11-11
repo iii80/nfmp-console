@@ -57,9 +57,9 @@ exec('ifconfig', function (err, stdout, stderr) {
     networkSource[index].netmask = item.replace('netmask ', '');
   });
 
-  _.map(source.match(/broadcast ([\w|\.]+)/mg), function (item, index) {
-    networkSource[index].gw = item.replace('broadcast ', '');
-  });
+  // _.map(source.match(/broadcast ([\w|\.]+)/mg), function (item, index) {
+  //   networkSource[index].gw = item.replace('broadcast ', '');
+  // });
 });
 
 /**
@@ -124,10 +124,10 @@ exports.change = function (req, res) {
       },
       isString: { errorMessage: 'netmask 需为字符串' }
     },
-    'gw': {
-      optional: true,
-      isString: { errorMessage: 'gw 需为字符串' }
-    },
+    // 'gw': {
+    //   optional: true,
+    //   isString: { errorMessage: 'gw 需为字符串' }
+    // },
     'toggle': {
       optional: true,
       isBoolean: { errorMessage: 'toggle 需为字符串' }
@@ -162,11 +162,13 @@ exports.change = function (req, res) {
   } else {
     var cmd = '';
 
-    if (_.has(req.body, 'gw')) {
-      cmd = 'ifconfig ' + req.params.network + ' ' + req.body.address + ' netmask ' + req.body.netmask + ' gw ' + req.body.gw;
-    } else {
-      cmd = 'ifconfig ' + req.params.network + ' ' + req.body.address + ' netmask ' + req.body.netmask;
-    }
+    // if (_.has(req.body, 'gw')) {
+    //   cmd = 'ifconfig ' + req.params.network + ' ' + req.body.address + ' netmask ' + req.body.netmask + ' gw ' + req.body.gw;
+    // } else {
+    //   cmd = 'ifconfig ' + req.params.network + ' ' + req.body.address + ' netmask ' + req.body.netmask;
+    // }
+
+    cmd = 'ifconfig ' + req.params.network + ' ' + req.body.address + ' netmask ' + req.body.netmask;
 
     exec(cmd, function (err, stdout, stderr) {
       if (err) {

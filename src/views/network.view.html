@@ -20,12 +20,12 @@
               <input ng-model="networkConfig.netmask" ng-pattern="/^((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$/" type="text" class="form-control" id="netmask" name="netmask" placeholder="请输入子网掩码地址" required>
             </div>
           </div>
-          <div ng-if="networkConfig.name !== 'lo'" ng-class="{ 'has-error': networkForm.gw.$touched && networkForm.gw.$invalid }" class="form-group">
-            <label for="gw" class="col-sm-2 control-label">* 网关地址：</label>
-            <div class="col-sm-10">
-              <input ng-model="$parent.networkConfig.gw" ng-pattern="/^((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$/" type="text" class="form-control" id="gw" name="gw" placeholder="请输入网关地址" required>
-            </div>
-          </div>
+          <!--<div ng-if="networkConfig.name !== 'lo'" ng-class="{ 'has-error': networkForm.gw.$touched && networkForm.gw.$invalid }" class="form-group">-->
+            <!--<label for="gw" class="col-sm-2 control-label">* 网关地址：</label>-->
+            <!--<div class="col-sm-10">-->
+              <!--<input ng-model="$parent.networkConfig.gw" ng-pattern="/^((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$/" type="text" class="form-control" id="gw" name="gw" placeholder="请输入网关地址" required>-->
+            <!--</div>-->
+          <!--</div>-->
         </form>
       </div>
       <div class="modal-footer">
@@ -51,7 +51,7 @@
           <th>设备</th>
           <th>地址</th>
           <th>子网掩码</th>
-          <th>网关</th>
+          <!--<th>网关</th>-->
           <th>MAC</th>
           <th>启用</th>
           <th>操作</th>
@@ -62,7 +62,7 @@
           <td>{{item.name}}</td>
           <td>{{item.address}}</td>
           <td>{{item.netmask}}</td>
-          <td>{{item.name === 'lo'? '-' : item.gw}}</td>
+          <!--<td>{{item.name === 'lo'? '-' : item.gw}}</td>-->
           <td>{{item.name === 'lo'? '-' : item.mac}}</td>
           <td>
             <i ng-class="{ 'fa-toggle-on text-success': item.active === true, 'fa-toggle-off text-muted': item.active === false }" ng-click="changeNetwork(item)" class="fa fa-2x pointer"></i>
