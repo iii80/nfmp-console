@@ -127,6 +127,10 @@ exports.change = function (req, res) {
     'gw': {
       optional: true,
       isString: { errorMessage: 'gw 需为字符串' }
+    },
+    'toggle': {
+      optional: true,
+      isBoolean: { errorMessage: 'toggle 需为字符串' }
     }
   });
 
@@ -135,9 +139,9 @@ exports.change = function (req, res) {
     return res.status(400).end();
   }
 
-  if (_.has(req.body), 'toggle') {
+  if (_.has(req.body, 'toggle')) {
     if (req.body.toggle === true) {
-      exec('ifconfig' + req.params.network + 'up', function (err, stdout, stderr) {
+      exec('ifconfig ' + req.params.network + ' up', function (err, stdout, stderr) {
         if (err) {
           logger.system().error(__filename, '启动网卡' + req.params.network + '失败', err);
           return res.status(400).end();
@@ -146,7 +150,7 @@ exports.change = function (req, res) {
         res.status(204).end();
       });
     } else {
-      exec('ifconfig' + req.params.network + 'down', function (err, stdout, stderr) {
+      exec('ifconfig ' + req.params.network + ' down', function (err, stdout, stderr) {
         if (err) {
           logger.system().error(__filename, '禁止网卡' + req.params.network + '失败', err);
           return res.status(400).end();
