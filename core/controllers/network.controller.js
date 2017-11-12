@@ -54,7 +54,7 @@ exec('ifconfig', function (err, stdout, stderr) {
   });
 
   _.map(source.match(/Mask:([\w|\.]+)/mg), function (item, index) {
-    networkSource[index].netmask = item.replace('Mask: ', '');
+    networkSource[index].netmask = item.replace('Mask:', '');
   });
 
   // _.map(source.match(/broadcast ([\w|\.]+)/mg), function (item, index) {
