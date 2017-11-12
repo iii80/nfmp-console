@@ -43,31 +43,31 @@ exports.list = function (req, res) {
     // _.map(source.match(/broadcast ([\w|\.]+)/mg), function (item, index) {
     //   networkSource[index].gw = item.replace('broadcast ', '');
     // });
-  });
 
-  var nodeNetwork = os.networkInterfaces();
+    var nodeNetwork = os.networkInterfaces();
 
-  var networkActive = [];
+    var networkActive = [];
 
-  _.forEach(nodeNetwork, function (item, key) {
-    _.forEach(item, function (_item, _key) {
-      if (_item.family === 'IPv4') {
-        networkActive.push(key);
-      }
+    _.forEach(nodeNetwork, function (item, key) {
+      _.forEach(item, function (_item, _key) {
+        if (_item.family === 'IPv4') {
+          networkActive.push(key);
+        }
+      });
     });
-  });
 
-  networkSource = _.map(networkSource, function (item) {
-    if (_.includes(networkActive, item.name)) {
-      item.active = true;
-    } else {
-      item.active = false;
-    }
+    networkSource = _.map(networkSource, function (item) {
+      if (_.includes(networkActive, item.name)) {
+        item.active = true;
+      } else {
+        item.active = false;
+      }
 
-    return item;
+      return item;
+    });
+
+    res.status(200).json(networkSource);
   });
-console.log(networkSource);
-  res.status(200).json(networkSource);
 };
 
 /**
