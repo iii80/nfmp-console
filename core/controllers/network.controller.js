@@ -45,16 +45,16 @@ exec('ifconfig', function (err, stdout, stderr) {
     });
   });
 
-  _.map(source.match(/inet ([\d|\.]+)/mg), function (item, index) {
-    networkSource[index].address = item.replace('inet ', '');
+  _.map(source.match(/inet addr:([\d|\.]+)/mg), function (item, index) {
+    networkSource[index].address = item.replace('inet addr:', '');
   });
 
-  _.map(source.match(/ether ([\w|\:]+)/mg), function (item, index) {
-    networkSource[index].mac = item.replace('ether ', '');
+  _.map(source.match(/HWaddr ([\w|\:]+)/mg), function (item, index) {
+    networkSource[index].mac = item.replace('HWaddr ', '');
   });
 
-  _.map(source.match(/netmask ([\w|\.]+)/mg), function (item, index) {
-    networkSource[index].netmask = item.replace('netmask ', '');
+  _.map(source.match(/Mask:([\w|\.]+)/mg), function (item, index) {
+    networkSource[index].netmask = item.replace('Mask: ', '');
   });
 
   // _.map(source.match(/broadcast ([\w|\.]+)/mg), function (item, index) {
