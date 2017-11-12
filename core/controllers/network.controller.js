@@ -11,7 +11,7 @@ var exec = require('child_process').exec;
 exports.list = function (req, res) {
   var networkSource = [];
 
-  exec('ifconfig', function (err, stdout, stderr) {
+  exec('ifconfig -a', function (err, stdout, stderr) {
     if (err) {
       logger.system().error(__filename, '打印网卡信息失败', err);
       return false;

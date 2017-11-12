@@ -34,11 +34,9 @@ angular.module('controllers').controller('network', ['$scope', '$state', '$state
     $scope.changeNetwork = function (item) {
       $http.put('/api/network/' + item.name, { toggle: item.active })
         .then(function (res) {
-          alert(true);
+          reload();
         });
       item.active = !item.active;
-
-      reload();
     };
 
     /**
