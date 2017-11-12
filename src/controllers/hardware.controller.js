@@ -135,31 +135,15 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
     var socket = io.connect('http://localhost:3000');
 
     socket.on('hardware', function (res) {
-      console.log(res);
-      var data = res.data;
+      $scope.$apply(function () {
+        $scope.cpuUsage = _.floor(res.cpu.usage);
+        $scope.cpuAmount = res.cpu.amount;
+        $scope.cpuModel = res.cpu.model;
+        $scope.memUsage = _.floor(res.mem.usage / res.mem.total * 100);
+        $scope.memTotal = _.floor(res.mem.total);
 
-      $scope.cpuUsage = _.floor(data.cpu.usage);
-      $scope.cpuAmount = data.cpu.amount;
-      $scope.cpuModel = data.cpu.model;
-      $scope.memUsage = _.floor(data.mem.usage / data.mem.total * 100);
-      $scope.memTotal = _.floor(data.mem.total);
-
-      chartData(data.network);
+        chartData(res.network);
+      });
     });
-    //
-    //   $interval(function () {
-    //   $http.get('/api/hardware')
-    //     .then(function (res) {
-    //       var data = res.data;
-    //
-    //       $scope.cpuUsage = _.floor(data.cpu.usage);
-    //       $scope.cpuAmount = data.cpu.amount;
-    //       $scope.cpuModel = data.cpu.model;
-    //       $scope.memUsage = _.floor(data.mem.usage / data.mem.total * 100);
-    //       $scope.memTotal = _.floor(data.mem.total);
-    //
-    //       chartData(data.network);
-    //     });
-    // }, 1000);
   }
 ]);
