@@ -38,7 +38,13 @@ exec('ifconfig', function (err, stdout, stderr) {
   var source = stdout.toString();
 
   var reg = /(\w+)\s+Link/mg;
-  var networkSource = source.match(reg).toString().replace(reg,'$1').split(',');
+  var result = source.match(reg).toString().replace(reg,'$1').split(',');
+
+  _.map(result, function (item) {
+    networkSource.push({
+      name: item
+    });
+  });
 
   _.map(source.match(/inet addr:([\d|\.]+)/mg), function (item, index) {
     networkSource[index].address = item.replace('inet addr:', '');
