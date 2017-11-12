@@ -32,7 +32,7 @@ angular.module('controllers').controller('network', ['$scope', '$state', '$state
      * 启用禁用网卡
      */
     $scope.changeNetwork = function (item) {
-      $http.put('/api/network/' + item.name, { toggle: item.active })
+      $http.put('/api/network/' + item.name, { toggle: !item.active })
         .then(function (res) {
           reload();
         });
