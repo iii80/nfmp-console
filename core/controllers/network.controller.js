@@ -66,7 +66,7 @@ exports.list = function (req, res) {
 
     return item;
   });
-
+console.log(networkSource);
   res.status(200).json(networkSource);
 };
 
@@ -135,7 +135,7 @@ exports.change = function (req, res) {
           errorMessage: 'netmask 不能为空'
         },
         isString: { errorMessage: 'netmask 需为字符串' }
-      },
+      }
       // 'gw': {
       //   optional: true,
       //   isString: { errorMessage: 'gw 需为字符串' }
