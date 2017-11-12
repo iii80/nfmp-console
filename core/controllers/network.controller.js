@@ -10,17 +10,16 @@ var exec = require('child_process').exec;
  */
 exports.list = function (req, res) {
   var networkSource = [];
+  var reg = /(\w+)\s+Link/mg;
 
-  exec('ifconfig -a', function (err, stdout, stderr) {
+  exec('ifconfig -a', function (err, stdout) {
     if (err) {
       logger.system().error(__filename, '打印网卡信息失败', err);
       return false;
     }
 
     var source = stdout.toString();
-
-    var reg = /(\w+)\s+Link/mg;
-    var result = source.match(reg).toString().replace(reg,'$1').split(',');
+    var result = source.match(reg).toString().replace(reg, '$1').split(',');
 
     _.map(result, function (item) {
       networkSource.push({
@@ -40,33 +39,27 @@ exports.list = function (req, res) {
       networkSource[index].netmask = item.replace('Mask:', '');
     });
 
-    // _.map(source.match(/broadcast ([\w|\.]+)/mg), function (item, index) {
-    //   networkSource[index].gw = item.replace('broadcast ', '');
-    // });
-
-    var nodeNetwork = os.networkInterfaces();
-
-    var networkActive = [];
-
-    _.forEach(nodeNetwork, function (item, key) {
-      _.forEach(item, function (_item, _key) {
-        if (_item.family === 'IPv4') {
-          networkActive.push(key);
-        }
-      });
-    });
-
-    networkSource = _.map(networkSource, function (item) {
-      if (_.includes(networkActive, item.name)) {
-        item.active = true;
-      } else {
-        item.active = false;
+    exec('ifconfig', function (err, stdout) {
+      if (err) {
+        logger.system().error(__filename, '打印网卡信息失败', err);
+        return false;
       }
 
-      return item;
-    });
+      var source = stdout.toString();
+      var _result = source.match(reg).toString().replace(reg, '$1').split(',');
 
-    res.status(200).json(networkSource);
+      networkSource = _.map(networkSource, function (item) {
+        if (_.includes(_result, item.name)) {
+          item.active = true;
+        } else {
+          item.active = false;
+        }
+
+        return item;
+      });
+
+      res.status(200).json(networkSource);
+    });
   });
 };
 
