@@ -132,19 +132,33 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
     /**
      * 读取硬件信息
      */
-    $interval(function () {
-      $http.get('/api/hardware')
-        .then(function (res) {
-          var data = res.data;
+    var socket = io.connect('http://localhost:3000');
 
-          $scope.cpuUsage = _.floor(data.cpu.usage);
-          $scope.cpuAmount = data.cpu.amount;
-          $scope.cpuModel = data.cpu.model;
-          $scope.memUsage = _.floor(data.mem.usage / data.mem.total * 100);
-          $scope.memTotal = _.floor(data.mem.total);
+    socket.on('hardware', function (res) {
+      var data = res.data;
 
-          chartData(data.network);
-        });
-    }, 1000);
+      $scope.cpuUsage = _.floor(data.cpu.usage);
+      $scope.cpuAmount = data.cpu.amount;
+      $scope.cpuModel = data.cpu.model;
+      $scope.memUsage = _.floor(data.mem.usage / data.mem.total * 100);
+      $scope.memTotal = _.floor(data.mem.total);
+
+      chartData(data.network);
+    });
+    //
+    //   $interval(function () {
+    //   $http.get('/api/hardware')
+    //     .then(function (res) {
+    //       var data = res.data;
+    //
+    //       $scope.cpuUsage = _.floor(data.cpu.usage);
+    //       $scope.cpuAmount = data.cpu.amount;
+    //       $scope.cpuModel = data.cpu.model;
+    //       $scope.memUsage = _.floor(data.mem.usage / data.mem.total * 100);
+    //       $scope.memTotal = _.floor(data.mem.total);
+    //
+    //       chartData(data.network);
+    //     });
+    // }, 1000);
   }
 ]);

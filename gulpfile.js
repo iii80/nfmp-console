@@ -76,7 +76,8 @@ var vendorSrcJS = [
   './src/vendor/bootstrap-markdown-2.10.0/js/bootstrap-markdown.zh.js',
   './src/vendor/bootstrap-datepicker-1.6.1/js/bootstrap-datepicker.js',
   './src/vendor/bootstrap-datepicker-1.6.1/js/bootstrap-datepicker.zh-CN.js',
-  './src/vendor/chart-2.7.0/Chart.js'
+  './src/vendor/chart-2.7.0/Chart.js',
+  './src/vendor/socket.io-2.0.4/socket.io.js'
 ];
 
 /**

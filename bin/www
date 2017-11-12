@@ -9,6 +9,7 @@ var http = require('http');
 var async = require('async');
 var port = require('../lib/port.lib.js')();
 var logger = require('../lib/logger.lib');
+var hardware = require('../core/controllers/hardware.controller');
 
 /**
  * 设置端口
@@ -19,6 +20,7 @@ app.set('port', port);
  * 创建 HTTP 服务器
  */
 var server = http.createServer(app);
+var io = require('socket.io').listen(server);
 
 /**
  * 监听端口
@@ -53,4 +55,8 @@ server.on('listening', function () {
   var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
 
   logger.system().info('正在监听 ' + bind);
+});
+
+io.sockets.on('connection', function (socket) {
+  hardware.information(socket);
 });

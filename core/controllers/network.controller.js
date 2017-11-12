@@ -58,7 +58,9 @@ exports.list = function (req, res) {
         return item;
       });
 
-      res.status(200).json(networkSource);
+      var outData = _.reject(networkSource, { name: 'lo' });
+
+      res.status(200).json(outData);
     });
   });
 };

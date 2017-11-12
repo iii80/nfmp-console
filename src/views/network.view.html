@@ -62,8 +62,7 @@
           <td>{{item.name}}</td>
           <td>{{item.address}}</td>
           <td>{{item.netmask}}</td>
-          <!--<td>{{item.name === 'lo'? '-' : item.gw}}</td>-->
-          <td>{{item.name === 'lo'? '-' : item.mac}}</td>
+          <td>{{item.name}}</td>
           <td>
             <i ng-class="{ 'fa-toggle-on text-success': item.active === true, 'fa-toggle-off text-muted': item.active === false }" ng-click="changeNetwork(item)" class="fa fa-2x pointer"></i>
           </td>
