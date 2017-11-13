@@ -65,8 +65,8 @@ exports.information = function (socket) {
 
       currData.unshift({
         name: '全部网卡',
-        receive: _.floor((totalData('receive', list) - totalData('receive', oldListData)) / 1024),
-        transmit: _.floor((totalData('transmit', list) - totalData('transmit', oldListData)) / 1024)
+        receive: _.floor((totalData('receive', list) - totalData('receive', oldListData)) * 8 / 1024),
+        transmit: _.floor((totalData('transmit', list) - totalData('transmit', oldListData)) * 8 / 1024)
       });
     }
 
