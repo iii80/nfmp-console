@@ -21,6 +21,9 @@ exports.list = function (req, res) {
       var data = {};
 
       data.name = _.get(/(\w+)\s+Link/mg.exec(item), 1);
+
+      if (data.name === 'lo') return false;
+
       data.address = _.get(/inet addr:([\d|\.]+)/mg.exec(item), 1);
       data.mac = _.get(/HWaddr ([\w|\:]+)/mg.exec(item), 1);
       data.netmask = _.get(/Mask:([\w|\.]+)/mg.exec(item), 1);
@@ -47,7 +50,7 @@ exports.list = function (req, res) {
         return item;
       });
 
-      var outData = _.reject(networkSource, { name: 'lo' });
+      // var outData = _.reject(networkSource, { name: 'lo' });
 
       res.status(200).json(outData);
     });
