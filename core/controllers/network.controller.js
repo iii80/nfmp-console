@@ -21,9 +21,9 @@ exports.list = function (req, res) {
       var data = {};
 
       data.name = _.get(/(\w+)\s+Link/mg.exec(item), 1);
-      data.address = _.get(/inet addr:([\d|\.]+)/mg.exec(d), 1) || null;
-      data.mac = _.get(/HWaddr ([\w|\:]+)/mg.exec(d), 1) || null;
-      data.netmask = _.get(/Mask:([\w|\.]+)/mg.exec(d), 1) || null;
+      data.address = _.get(/inet addr:([\d|\.]+)/mg.exec(item), 1) || null;
+      data.mac = _.get(/HWaddr ([\w|\:]+)/mg.exec(item), 1) || null;
+      data.netmask = _.get(/Mask:([\w|\.]+)/mg.exec(item), 1) || null;
 
       return data;
     });
