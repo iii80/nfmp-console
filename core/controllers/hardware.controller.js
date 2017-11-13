@@ -55,8 +55,6 @@ exports.information = function (socket) {
 
       currData.unshift({ name: '全部网卡', receive: 0, transmit: 0 });
     } else {
-      console.log(list);
-      console.log(oldListData);
       currData = _.map(list, function (item, index) {
         return {
           name: '网卡' + item[0].replace(/:/, ''),
@@ -110,5 +108,5 @@ exports.information = function (socket) {
 
       socket.emit('hardware', output);
     });
-  }, 1000);
+  }, 100);
 };
