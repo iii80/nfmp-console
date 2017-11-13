@@ -29,8 +29,6 @@ exports.list = function (req, res) {
       return data;
     });
 
-    networkSource = _.reject(networkSource, { name: 'lo' });
-
     exec('ifconfig', function (err, stdout) {
       if (err) {
         logger.system().error(__filename, '打印网卡信息失败', err);
@@ -50,7 +48,9 @@ exports.list = function (req, res) {
         return item;
       });
 
-      res.status(200).json(networkSource);
+      var output = _.reject(networkSource, { name: 'lo' });
+
+      res.status(200).json(output);
     });
   });
 };
