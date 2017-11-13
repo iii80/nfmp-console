@@ -134,7 +134,7 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
      */
     var socket = io.connect('http://localhost:3000');
 
-    socket.on('hardware', _.debounce(function (res) {
+    socket.on('hardware', _.throttle(function (res) {
       console.log(res);
       $scope.$apply(function () {
         $scope.cpuUsage = _.floor(res.cpu.usage);
