@@ -35,7 +35,7 @@ exports.list = function (req, res) {
       }
 
       var source = stdout.toString();
-      var _result = source.match(reg).toString().replace(reg, '$1').split(',');
+      var _result = source.match(/(\w+)\s+Link/mg).toString().replace(reg, '$1').split(',');
 
       networkSource = _.map(networkSource, function (item) {
         if (_.includes(_result, item.name)) {
