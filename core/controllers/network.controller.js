@@ -28,9 +28,9 @@ exports.list = function (req, res) {
 
       return data;
     });
-
+console.log(networkSource);
     networkSource = _.reject(networkSource, { name: 'lo' });
-
+console.log(networkSource);
     exec('ifconfig', function (err, stdout) {
       if (err) {
         logger.system().error(__filename, '打印网卡信息失败', err);
