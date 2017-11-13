@@ -72,6 +72,8 @@ exports.information = function (socket) {
       });
     }
 
+    oldListData = list;
+
     async.parallel({
       cpuAndMem: function (callback) {
         osUtils.cpuUsage(function (cpuUsage) {
