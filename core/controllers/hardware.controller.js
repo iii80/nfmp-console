@@ -6,6 +6,7 @@ var async = require('async');
 var _ = require('lodash');
 var logger = require('../../lib/logger.lib');
 
+var memTotal = os.totalmem();
 var oldListData = [];
 var currData = [];
 
@@ -16,7 +17,6 @@ var currData = [];
  */
 exports.information = function (socket) {
   setInterval(function () {
-    var memTotal = os.totalmem();
     var memUsage = memTotal - os.freemem();
 
     var sourceData =  fs.readFileSync('/proc/net/dev').toString();
@@ -108,5 +108,5 @@ exports.information = function (socket) {
 
       socket.emit('hardware', output);
     });
-  }, 100);
+  }, 10);
 };
