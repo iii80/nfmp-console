@@ -15,8 +15,8 @@ exports.list = function (req, res) {
       return false;
     }
 
-    var networkSource = stdout.toString().split(/\n\n/);
-console.log(networkSource);
+    var networkSource = _.initial(stdout.toString().split(/\n\n/));
+
     networkSource = _.map(networkSource, function (item) {
       var data = {};
 
