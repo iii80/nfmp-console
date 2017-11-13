@@ -20,7 +20,7 @@ exports.list = function (req, res) {
     networkSource = _.map(networkSource, function (item) {
       var data = {};
 
-      data.name = _.get(/(\w+)\s+Link/mg.exec(item), 1);
+      data.name = _.get(/(.+)\s+Link/mg.exec(item), 1);
 
       data.address = _.get(/inet addr:([\d|\.]+)/mg.exec(item), 1);
       data.mac = _.get(/HWaddr ([\w|\:]+)/mg.exec(item), 1);
@@ -38,7 +38,7 @@ exports.list = function (req, res) {
       }
 
       var source = stdout.toString();
-      var _result = source.match(/(\w+)\s+Link/mg).toString().replace(/(\w+)\s+Link/mg, '$1').split(',');
+      var _result = source.match(/(.+)\s+Link/mg).toString().replace(/(.+)\s+Link/mg, '$1').split(',');
 
       networkSource = _.map(networkSource, function (item) {
         if (_.includes(_result, item.name)) {
