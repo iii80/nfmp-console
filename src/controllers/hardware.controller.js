@@ -134,17 +134,28 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
      */
     var socket = io.connect('http://localhost:3000');
 
-    socket.on('hardware', function (res) {
-      _.debounce(function () {
-        $scope.$apply(function () {
-          $scope.cpuUsage = _.floor(res.cpu.usage);
-          $scope.cpuAmount = res.cpu.amount;
-          $scope.cpuModel = res.cpu.model;
-          $scope.memUsage = _.floor(res.mem.usage / res.mem.total * 100);
-          $scope.memTotal = _.floor(res.mem.total);
-          chartData(res.network);
-        });
-      }, 1000)();
-    });
+    socket.on('hardware', _.debounce(function (res) {
+      $scope.$apply(function () {
+        $scope.cpuUsage = _.floor(res.cpu.usage);
+        $scope.cpuAmount = res.cpu.amount;
+        $scope.cpuModel = res.cpu.model;
+        $scope.memUsage = _.floor(res.mem.usage / res.mem.total * 100);
+        $scope.memTotal = _.floor(res.mem.total);
+        chartData(res.network);
+      });
+    }, 1000));
+
+    // socket.on('hardware', function (res) {
+    //   _.debounce(function () {
+    //     $scope.$apply(function () {
+    //       $scope.cpuUsage = _.floor(res.cpu.usage);
+    //       $scope.cpuAmount = res.cpu.amount;
+    //       $scope.cpuModel = res.cpu.model;
+    //       $scope.memUsage = _.floor(res.mem.usage / res.mem.total * 100);
+    //       $scope.memTotal = _.floor(res.mem.total);
+    //       chartData(res.network);
+    //     });
+    //   }, 5000)();
+    // });
   }
 ]);
