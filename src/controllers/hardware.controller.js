@@ -144,7 +144,7 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
         $scope.memTotal = _.floor(res.mem.total);
         chartData(res.network);
       });
-    }, 1000));
+    }, 3000));
 
     // socket.on('hardware', function (res) {
     //   _.debounce(function () {
