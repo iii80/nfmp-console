@@ -71,7 +71,7 @@ exports.information = function (socket) {
     }
 
     oldListData = list;
-console.log(list);
+console.log(currData);
     async.parallel({
       cpuAndMem: function (callback) {
         osUtils.cpuUsage(function (cpuUsage) {
