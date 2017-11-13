@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = {
   appenders: [
     {
@@ -6,14 +8,14 @@ module.exports = {
     {
       type: 'dateFile',
       category: 'access',
-      filename: 'logs/access/access',
+      filename: path.join(__dirname, '../logs/access/access'),
       pattern: '-dd--hh.log',
       alwaysIncludePattern: true
     },
     {
       type: 'dateFile',
       category: 'system',
-      filename: 'logs/system/system',
+      filename: path.join(__dirname, '../logs/system/system'),
       pattern: '-dd.log',
       alwaysIncludePattern: true
     },
@@ -22,7 +24,7 @@ module.exports = {
       level: 'ERROR',
       appender: {
         type: 'dateFile',
-        filename: 'logs/errors/error',
+        filename: path.join(__dirname, '../logs/errors/error'),
         pattern: '-MM-dd.log',
         alwaysIncludePattern: true
       }
