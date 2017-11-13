@@ -52,7 +52,7 @@ exports.list = function (req, res) {
 
       // var outData = _.reject(networkSource, { name: 'lo' });
 
-      res.status(200).json(outData);
+      res.status(200).json(networkSource);
     });
   });
 };
