@@ -9,34 +9,23 @@ var exec = require('child_process').exec;
  * @param {Object} res
  */
 exports.list = function (req, res) {
-  var networkSource = [];
-  var reg = /(\w+)\s+Link/mg;
-
   exec('ifconfig -a', function (err, stdout) {
     if (err) {
       logger.system().error(__filename, '打印网卡信息失败', err);
       return false;
     }
 
-    var source = stdout.toString();
-    var result = source.match(reg).toString().replace(reg, '$1').split(',');
+    var networkSource = stdout.toString().split(/\n\n/);
 
-    _.map(result, function (item) {
-      networkSource.push({
-        name: item
-      });
-    });
+    networkSource = _.map(networkSource, function (item) {
+      var data = {};
 
-    _.map(source.match(/inet addr:([\d|\.]+)/mg), function (item, index) {
-      networkSource[index].address = item.replace('inet addr:', '');
-    });
+      data.name = _.get(/(\w+)\s+Link/mg.exec(item), 1);
+      data.address = _.get(/inet addr:([\d|\.]+)/mg.exec(d), 1) || null;
+      data.mac = _.get(/HWaddr ([\w|\:]+)/mg.exec(d), 1) || null;
+      data.netmask = _.get(/Mask:([\w|\.]+)/mg.exec(d), 1) || null;
 
-    _.map(source.match(/HWaddr ([\w|\:]+)/mg), function (item, index) {
-      networkSource[index].mac = item.replace('HWaddr ', '');
-    });
-
-    _.map(source.match(/Mask:([\w|\.]+)/mg), function (item, index) {
-      networkSource[index].netmask = item.replace('Mask:', '');
+      return data;
     });
 
     exec('ifconfig', function (err, stdout) {
