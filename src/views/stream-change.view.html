@@ -1,0 +1,50 @@
+<div class="page-header clearfix">
+    <ol ng-if="action === 'create'" class="heading">
+        <li><a ui-sref="main.stream">转码管理</a></li>
+        <li><a ui-sref="main.stream.create">新增转码</a></li>
+    </ol>
+    <ol ng-if="action === 'update'" class="heading">
+        <li><a ui-sref="main.stream">转码管理</a></li>
+        <li><a ui-sref="main.stream.update({ _id: _id })">更新转码</a></li>
+    </ol>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form ng-submit="saveStream()" class="form-horizontal" id="streamForm" name="streamForm" novalidate>
+            <div ng-class="{ 'has-error': streamForm.name.$touched && streamForm.name.$invalid }" class="form-group">
+                <label for="name" class="col-sm-2 control-label">* 频道名称：</label>
+                <div class="col-sm-10">
+                    <input ng-model="name" ng-pattern="/^\w+$/" ng-disabled="transmitting" class="form-control" id="name" type="text" name="name" placeholder="请输入以频道名称，例如 cctv1" required>
+                    <p ng-show="streamForm.name.$touched && streamForm.name.$invalid" class="help-block">频道名称仅允许输入英文</p>
+                </div>
+            </div>
+            <div ng-class="{ 'has-error': streamForm.url.$touched && streamForm.url.$invalid }" class="form-group">
+                <label for="url" class="col-sm-2 control-label">* 输入地址：</label>
+                <div class="col-sm-10">
+                    <input ng-model="url" ng-disabled="transmitting" class="form-control" id="url" type="text" name="url" placeholder="请输入来源地址" required>
+                </div>
+            </div>
+            <div ng-class="{ 'has-error': streamForm.network.$touched && streamForm.network.$invalid }" class="form-group">
+                <label for="network" class="col-sm-2 control-label">* 输出网卡：</label>
+                <div class="col-sm-10">
+                    <select ng-model="networkName" ng-options="item.name as item.name for item in network" ng-disabled="$parent.transmitting" id="network" class="form-control" required>
+                        <option value="">请选择网卡</option>
+                    </select>
+                </div>
+            </div>
+            <div ng-class="{ 'has-error': streamForm.hls.$touched && streamForm.hls.$invalid }" class="form-group">
+              <label for="hls" class="col-sm-2 control-label">hls 开关：</label>
+              <div class="col-sm-10">
+                <i ng-class="{ 'fa-toggle-on text-success': true === true, 'fa-toggle-off text-muted': true === false }" ng-click="" class="fa fa-2x pointer"></i>
+              </div>
+            </div>
+            <div ng-class="{ 'has-error': streamForm.muhicast.$touched && streamForm.muhicast.$invalid }" class="form-group">
+              <label for="muhicast" class="col-sm-2 control-label">组播开关：</label>
+              <div class="col-sm-10">
+                <i ng-class="{ 'fa-toggle-on text-success': true === true, 'fa-toggle-off text-muted': true === false }" ng-click="" class="fa fa-2x pointer"></i>
+              </div>
+            </div>
+        </form>
+    </div>
+</div>
+<button ng-disabled="transmitting || inputing || streamForm.$invalid" class="btn btn-primary pull-right" form="streamForm" type="submit"><i class="fa fa-save"></i> 保存频道</button>

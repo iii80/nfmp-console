@@ -77,6 +77,33 @@ angular.module('console', [
         }]
       })
 
+      // 转码管理
+      .state('main.stream', {
+        url: '^/stream',
+        controller: 'stream',
+        templateProvider: ['$templateCache', function($templateCache) {
+          return $templateCache.get('stream.view.html');
+        }]
+      })
+
+      // 新增转码
+      .state('main.stream.create', {
+        url: '^/stream/create',
+        controller: 'streamChange',
+        templateProvider: ['$templateCache', function($templateCache) {
+          return $templateCache.get('stream-change.view.html');
+        }]
+      })
+
+      // 更新转码
+      .state('main.stream.update', {
+        url: '^/stream/:_id',
+        controller: 'streamChange',
+        templateProvider: ['$templateCache', function($templateCache) {
+          return $templateCache.get('stream-change.view.html');
+        }]
+      })
+
 　    // 网络设置
       .state('main.network', {
         url: '^/network',

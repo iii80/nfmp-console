@@ -132,7 +132,7 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
     /**
      * 读取硬件信息
      */
-    var socket = io.connect('http://localhost:3000');
+    var socket = io.connect('/');
 
     socket.on('hardware', _.throttle(function (res) {
       $scope.$apply(function () {

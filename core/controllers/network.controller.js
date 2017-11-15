@@ -1,7 +1,7 @@
-var os = require('os');
 var _ = require('lodash');
 var logger = require('../../lib/logger.lib');
 var exec = require('child_process').exec;
+var network = require('../services/network.service');
 
 /**
  * 网络列表
@@ -9,49 +9,13 @@ var exec = require('child_process').exec;
  * @param {Object} res
  */
 exports.list = function (req, res) {
-  exec('ifconfig -a', function (err, stdout) {
+  network.list(function (err, results) {
     if (err) {
-      logger.system().error(__filename, '打印网卡信息失败', err);
+      logger[err.type]().error(__filename, err.message, err);
       return false;
     }
 
-    var networkSource = _.initial(stdout.toString().split(/\n\n/));
-
-    networkSource = _.map(networkSource, function (item) {
-      var data = {};
-
-      data.name = _.get(/([\w|\.|\:]+)\s+Link/mg.exec(item), 1);
-
-      data.address = _.get(/inet addr:([\d|\.]+)/mg.exec(item), 1);
-      data.mac = _.get(/HWaddr ([\w|\:]+)/mg.exec(item), 1);
-      data.netmask = _.get(/Mask:([\w|\.]+)/mg.exec(item), 1);
-
-      return data;
-    });
-
-    exec('ifconfig', function (err, stdout) {
-      if (err) {
-        logger.system().error(__filename, '打印网卡信息失败', err);
-        return false;
-      }
-
-      var source = stdout.toString();
-      var _result = source.match(/([\w|\.|\:]+)\s+Link/mg).toString().replace(/([\w|\.|\:]+)\s+Link/mg, '$1').split(',');
-
-      networkSource = _.map(networkSource, function (item) {
-        if (_.includes(_result, item.name)) {
-          item.active = true;
-        } else {
-          item.active = false;
-        }
-
-        return item;
-      });
-
-      var output = _.reject(networkSource, { name: 'lo' });
-
-      res.status(200).json(output);
-    });
+    res.status(200).json(results);
   });
 };
 

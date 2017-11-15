@@ -7,11 +7,11 @@
         <h4 class="modal-title" id="deleteModalTitle">警告</h4>
       </div>
       <div class="modal-body">
-        <h4 class="text-center">您确定要删除该频道？</h4>
+        <h4 class="text-center">您确定要删除该转码？</h4>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-        <button ng-disabled="transmitting" ng-click="deleteChannel()" type="button" class="btn btn-danger">确认删除</button>
+        <button ng-disabled="transmitting" ng-click="deleteStream()" type="button" class="btn btn-danger">确认删除</button>
       </div>
     </div>
   </div>
@@ -20,9 +20,9 @@
 <div ui-view class="view clearfix">
   <div class="page-header clearfix">
     <ol class="heading pull-left">
-      <li><a ui-sref="main.channel">频道管理</a></li>
+      <li><a ui-sref="main.stream">转码管理</a></li>
     </ol>
-    <a ui-sref="main.channel.create" class="btn btn-primary btn-sm pull-right"><i class="fa fa-pencil"></i> 新增频道</a>
+    <a ui-sref="main.stream.create" class="btn btn-primary btn-sm pull-right"><i class="fa fa-pencil"></i> 新增转码</a>
   </div>
   <div class="panel panel-default clear-bottom-margin">
     <div class="panel-body table-responsive">
@@ -31,21 +31,27 @@
         <tr>
           <th>频道ID</th>
           <th>频道名称</th>
-          <th>源URL</th>
-          <th>备注</th>
-          <th>视频格式</th>
+          <th>输入地址</th>
+          <th>http/udp</th>
+          <th>输出地址</th>
+          <th>输出</th>
+          <th>激活</th>
           <th>操作</th>
         </tr>
         </thead>
         <tbody class="text-center text-middle">
-        <tr ng-repeat="item in channel">
+        <tr ng-repeat="item in stream">
+          <td>{{item.id}}</td>
           <td>{{item.name}}</td>
           <td>{{item.url}}</td>
-          <td>{{item.source}}</td>
-          <td>{{item.remark}}</td>
-          <td>{{translate(item.source)}}</td>
+          <td></td>
+          <td></td>
+          <td></td>
           <td>
-            <a ui-sref="main.channel.update({ _id: item.name })" class="btn btn-default btn-xs"><i class="fa fa-edit"></i> 修改</a>
+            <i ng-class="{ 'fa-toggle-on text-success': item.active === true, 'fa-toggle-off text-muted': item.active === false }" ng-click="" class="fa fa-2x pointer"></i>
+          </td>
+          <td>
+            <a ui-sref="main.stream.update({ _id: item.name })" class="btn btn-default btn-xs"><i class="fa fa-edit"></i> 修改</a>
             <button ng-click="$parent.$parent.deleteChannelId = item.name" class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o"></i> 删除</button>
           </td>
         </tr>
