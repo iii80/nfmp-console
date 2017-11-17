@@ -178,18 +178,18 @@ exports.create = function (req, res) {
 
       if (stream.muhicast && !stream.hls) {
         cmd = normal +
-          '-vcodec copy -acodec copy -f mpegts "' +
+          ' -vcodec copy -acodec copy -f mpegts "' +
           stream.outUrl +
           '?localaddr=' +
           results.getNetwork.address +
           '"';
       } else if (!stream.muhicast && stream.hls) {
         cmd = normal +
-          '-vcodec copy -acodec copy -f hls -hls_list_size 6 -hls_wrap 10 -hls_time 10 ' +
+          ' -vcodec copy -acodec copy -f hls -hls_list_size 6 -hls_wrap 10 -hls_time 10 ' +
           path.join(__dirname, '../../stream/' + stream.name  + '/1.m3u8');
       } else if (stream.muhicast && stream.hls) {
         cmd = normal +
-          '-vcodec copy -acodec copy -f hls -hls_list_size 6 -hls_wrap 10 -hls_time 10 ' +
+          ' -vcodec copy -acodec copy -f hls -hls_list_size 6 -hls_wrap 10 -hls_time 10 ' +
           path.join(__dirname, '../../stream/' + stream.name  + '/1.m3u8') +
           '-vcodec copy -acodec copy -f mpegts "' +
           stream.outUrl +

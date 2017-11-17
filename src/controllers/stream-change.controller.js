@@ -13,7 +13,7 @@ angular.module('controllers').controller('streamChange', ['$scope', '$state', '$
     $scope._id = $stateParams._id;
     $scope.name = '';
     $scope.url = '';
-    $scope.outUrl = '';
+    $scope.outUrl = 'udp://';
     $scope.hls = false;
     $scope.muhicast = false;
 
