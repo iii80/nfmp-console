@@ -4,7 +4,6 @@ var path = require('path');
 var _ = require('lodash');
 var async = require('async');
 var exec = require('child_process').exec;
-var spawn = require('child_process').spawn;
 var logger = require('../../lib/logger.lib');
 var networkService = require('../services/network.service');
 var streamService = require('../services/stream.service');

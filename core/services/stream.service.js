@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 var _ = require('lodash');
 var spawn = require('child_process').spawn;
 var server = null;
