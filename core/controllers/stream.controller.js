@@ -258,7 +258,7 @@ exports.create = function (req, res) {
 
       server = spawn('ffmpeg', [results.createCMD]);
 
-      console.log(server);
+      console.log(server.pid);
 
       server.on('close',function(code, signal){
         console.log(signal);
@@ -268,7 +268,7 @@ exports.create = function (req, res) {
         console.log(signal);
       });
 
-      callback(null, stdout);
+      callback();
 
       // exec(results.createCMD, function (err, stdout) {
       //   if (err) {
