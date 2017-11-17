@@ -4,6 +4,7 @@ var path = require('path');
 var _ = require('lodash');
 var async = require('async');
 var exec = require('child_process').exec;
+var spawn = require('child_process').spawn
 var logger = require('../../lib/logger.lib');
 var networkService = require('../services/network.service');
 
@@ -154,7 +155,7 @@ exports.create = function (req, res) {
 
   async.auto({
     mkdir: function (callback) {
-      mkdirp(path.join(__dirname, '../../stream/' + stream.name), function (err) {
+      mkdirp(path.join(__dirname, '../../public/stream/' + stream.name), function (err) {
         if (err) err.type = 'system';
 
         callback(err);
@@ -173,7 +174,7 @@ exports.create = function (req, res) {
       });
     },
     createCMD: ['mkdir', 'getNetwork', function (callback, results) {
-      var normal = 'ffmpeg -i ' + stream.url;
+      var normal = '-i ' + stream.url;
       var cmd = '';
 
       if (stream.muhicast && !stream.hls) {
@@ -186,11 +187,11 @@ exports.create = function (req, res) {
       } else if (!stream.muhicast && stream.hls) {
         cmd = normal +
           ' -vcodec copy -acodec copy -f hls -hls_list_size 6 -hls_wrap 10 -hls_time 10 ' +
-          path.join(__dirname, '../../stream/' + stream.name  + '/1.m3u8');
+          path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8');
       } else if (stream.muhicast && stream.hls) {
         cmd = normal +
           ' -vcodec copy -acodec copy -f hls -hls_list_size 6 -hls_wrap 10 -hls_time 10 ' +
-          path.join(__dirname, '../../stream/' + stream.name  + '/1.m3u8') +
+          path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8') +
           '-vcodec copy -acodec copy -f mpegts "' +
           stream.outUrl +
           '?localaddr=' +
@@ -199,8 +200,6 @@ exports.create = function (req, res) {
       } else if (!stream.muhicast && !stream.hls) {
         cmd = null;
       }
-
-      console.log(cmd);
 
       callback(null, cmd);
     }],
@@ -257,16 +256,32 @@ exports.create = function (req, res) {
         return false;
       }
 
-      exec(results.createCMD, function (err, stdout) {
-        if (err) {
-          err.type = 'system';
-          err.message = '执行 Stream 命令失败';
-          callback(err);
-          return false;
-        }
+      server = spawn('ffmpeg', [results.createCMD]);
 
-        callback(null, stdout);
+      console.log(server);
+
+      server.on('close',function(code, signal){
+        console.log(signal);
       });
+      server.on('error',function(code, signal){
+        server.kill(signal);
+        console.log(signal);
+      });
+
+      callback(null, stdout);
+
+      // exec(results.createCMD, function (err, stdout) {
+      //   if (err) {
+      //     err.type = 'system';
+      //     err.message = '执行 Stream 命令失败';
+      //     callback(err);
+      //     return false;
+      //   }
+      //
+      //   console.log(stdout);
+      //
+      //   callback(null, stdout);
+      // });
     }]
   }, function (err, results) {
     if (err) {

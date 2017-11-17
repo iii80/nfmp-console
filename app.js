@@ -31,11 +31,6 @@ app.use(session({
   saveUninitialized: true,
 }));
 app.use(express.static(path.join(__dirname, 'public')));
-//设置跨域访问
-app.all('*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
-});
 
 /**
  * 转给 Roter 处理路由
