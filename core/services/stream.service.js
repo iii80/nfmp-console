@@ -62,7 +62,7 @@ function writePid (id, pid, callback) {
  * 运行命令
  * @callback {Object} 网卡列表
  */
-exports.runCMD = function (id, cmd) {
+exports.runCMD = function (id, cmd, callback) {
   function startServer() {
     server = spawn(cmd[0], cmd[1]);
 
