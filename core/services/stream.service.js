@@ -52,8 +52,6 @@ function writePid (id, pid, callback) {
         callback(err);
         return false;
       }
-
-      callback();
     });
   });
 }
