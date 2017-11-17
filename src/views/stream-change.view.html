@@ -24,25 +24,31 @@
                     <input ng-model="url" ng-disabled="transmitting" class="form-control" id="url" type="text" name="url" placeholder="请输入来源地址" required>
                 </div>
             </div>
-            <div ng-class="{ 'has-error': streamForm.network.$touched && streamForm.network.$invalid }" class="form-group">
+            <div ng-class="{ 'has-error': streamForm.hls.$touched && streamForm.hls.$invalid }" class="form-group">
+                <label for="hls" class="col-sm-2 control-label">hls 开关：</label>
+                <div class="col-sm-10">
+                    <i ng-class="{ 'fa-toggle-on text-success': hls === true, 'fa-toggle-off text-muted': hls === false }" ng-click="hls = !hls" class="fa fa-2x pointer"></i>
+                </div>
+            </div>
+            <div ng-class="{ 'has-error': streamForm.muhicast.$touched && streamForm.muhicast.$invalid }" class="form-group">
+                <label for="muhicast" class="col-sm-2 control-label">组播开关：</label>
+                <div class="col-sm-10">
+                    <i ng-class="{ 'fa-toggle-on text-success': muhicast === true, 'fa-toggle-off text-muted': muhicast === false }" ng-click="muhicast = !muhicast" class="fa fa-2x pointer"></i>
+                </div>
+            </div>
+            <div ng-if="muhicast" ng-class="{ 'has-error': streamForm.network.$touched && streamForm.network.$invalid }" class="form-group">
                 <label for="network" class="col-sm-2 control-label">* 输出网卡：</label>
                 <div class="col-sm-10">
-                    <select ng-model="networkName" ng-options="item.name as item.name for item in network" ng-disabled="$parent.transmitting" id="network" class="form-control" required>
+                    <select ng-model="$parent.networkName" ng-options="item.name as item.name for item in network" ng-disabled="$parent.transmitting" id="network" class="form-control" required>
                         <option value="">请选择网卡</option>
                     </select>
                 </div>
             </div>
-            <div ng-class="{ 'has-error': streamForm.hls.$touched && streamForm.hls.$invalid }" class="form-group">
-              <label for="hls" class="col-sm-2 control-label">hls 开关：</label>
-              <div class="col-sm-10">
-                <i ng-class="{ 'fa-toggle-on text-success': true === true, 'fa-toggle-off text-muted': true === false }" ng-click="" class="fa fa-2x pointer"></i>
-              </div>
-            </div>
-            <div ng-class="{ 'has-error': streamForm.muhicast.$touched && streamForm.muhicast.$invalid }" class="form-group">
-              <label for="muhicast" class="col-sm-2 control-label">组播开关：</label>
-              <div class="col-sm-10">
-                <i ng-class="{ 'fa-toggle-on text-success': true === true, 'fa-toggle-off text-muted': true === false }" ng-click="" class="fa fa-2x pointer"></i>
-              </div>
+            <div ng-if="muhicast" ng-class="{ 'has-error': streamForm.outUrl.$touched && streamForm.outUrl.$invalid }" class="form-group">
+                <label for="outUrl" class="col-sm-2 control-label">* 输出地址：</label>
+                <div class="col-sm-10">
+                    <input ng-model="$parent.outUrl" ng-disabled="transmitting" class="form-control" id="outUrl" type="text" name="outUrl" placeholder="请输入组播输出地址" required>
+                </div>
             </div>
         </form>
     </div>

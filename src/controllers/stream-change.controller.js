@@ -13,7 +13,9 @@ angular.module('controllers').controller('streamChange', ['$scope', '$state', '$
     $scope._id = $stateParams._id;
     $scope.name = '';
     $scope.url = '';
-    $scope.remark = '';
+    $scope.outUrl = '';
+    $scope.hls = false;
+    $scope.muhicast = false;
 
     $scope.network = {};
     $scope.networkName = '';
@@ -60,10 +62,19 @@ angular.module('controllers').controller('streamChange', ['$scope', '$state', '$
       $scope.transmitting = true;
 
       var stream = {
-        networkName: $scope.networkName,
         name: $scope.name,
         url: $scope.url
       };
+
+      if ($scope.hls) {
+        stream.hls = true;
+      }
+
+      if ($scope.muhicast) {
+        stream.muhicast = true;
+        stream.network = $scope.networkName;
+        stream.outUrl = $scope.outUrl;
+      }
 
       if ($scope._id) {
         // $http.put('/api/channel/' + $scope._id, channel)

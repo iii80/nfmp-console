@@ -78,13 +78,6 @@ exports.list = function (req, res) {
  */
 exports.create = function (req, res) {
   req.checkBody({
-    'networkName': {
-      notEmpty: {
-        options: [true],
-        errorMessage: 'networkName 不能为空'
-      },
-      isString: { errorMessage: 'networkName 需为字符串' }
-    },
     'name': {
       notEmpty: {
         options: [true],
@@ -101,17 +94,63 @@ exports.create = function (req, res) {
     }
   });
 
+  if (req.body.hls) {
+    req.checkBody({
+      'hls': {
+        notEmpty: {
+          options: [true],
+          errorMessage: 'hls 不能为空'
+        },
+        isBoolean: { errorMessage: 'hls 需为Boolean' }
+      }
+    });
+  }
+
+  if (req.body.muhicast) {
+    req.checkBody({
+      'muhicast': {
+        notEmpty: {
+          options: [true],
+          errorMessage: 'muhicast 不能为空'
+        },
+        isBoolean: { errorMessage: 'muhicast 需为Boolean' }
+      },
+      'network': {
+        notEmpty: {
+          options: [true],
+          errorMessage: 'network 不能为空'
+        },
+        isString: { errorMessage: 'network 需为字符串' }
+      },
+      'outUrl': {
+        notEmpty: {
+          options: [true],
+          errorMessage: 'outUrl 不能为空'
+        },
+        isString: { errorMessage: 'outUrl 需为字符串' }
+      }
+    });
+  }
+
   if (req.validationErrors()) {
     logger.system().error(__filename, '参数验证失败', req.validationErrors() );
     return res.status(400).end();
   }
 
   var stream = {
-    networkName: req.body.networkName,
     name: req.body.name,
-    url: req.body.url,
-    active: true
+    url: req.body.url
   };
+
+  if (req.body.hls) {
+    stream.hls = true;
+  }
+
+  if (req.body.muhicast) {
+    stream.muhicast = true;
+    stream.network = req.body.network;
+    stream.outUrl = req.body.outUrl;
+  }
 
   async.auto({
     mkdir: function (callback) {
@@ -122,20 +161,44 @@ exports.create = function (req, res) {
       });
     },
     getNetwork: function (callback) {
-      networkService.one(stream.networkName, function (err, result) {
+      if (!stream.network) {
+        callback();
+        return false;
+      }
+
+      networkService.one(stream.network, function (err, result) {
         if (err) err.type = 'system';
 
         callback(err, result);
       });
     },
     createCMD: ['mkdir', 'getNetwork', function (callback, results) {
-      var cmd = 'ffmpeg -i ' +
-        stream.url +
-        ' -vcodec copy -acodec copy -f hls -hls_list_size 6 -hls_wrap 10 -hls_time 10 ' +
-        path.join(__dirname, '../../stream/' + stream.name + '/1.m3u8') +
-        ' -vcodec copy -acodec copy -f mpegts ' +
-        stream.url +
-        '?localaddr=' + results.getNetwork.address;
+      var normal = 'ffmpeg -i ' + stream.url;
+      var cmd = '';
+
+      if (stream.muhicast && !stream.hls) {
+        cmd = normal +
+          '-vcodec copy -acodec copy -f mpegts ' +
+          stream.outUrl +
+          '?localaddr=' +
+          results.getNetwork.address;
+      } else if (!stream.muhicast && stream.hls) {
+        cmd = normal +
+          '-vcodec copy -acodec copy -f hls -hls_list_size 6 -hls_wrap 10 -hls_time 10 ' +
+          path.join(__dirname, '../../stream/' + stream.name  + '/1.m3u8');
+      } else if (stream.muhicast && stream.hls) {
+        cmd = normal +
+          '-vcodec copy -acodec copy -f hls -hls_list_size 6 -hls_wrap 10 -hls_time 10 ' +
+          path.join(__dirname, '../../stream/' + stream.name  + '/1.m3u8') +
+          '-vcodec copy -acodec copy -f mpegts ' +
+          stream.outUrl +
+          '?localaddr=' +
+          results.getNetwork.address;
+      } else if (!stream.muhicast && !stream.hls) {
+        cmd = null;
+      }
+
+      console.log(cmd);
 
       callback(null, cmd);
     }],
@@ -187,13 +250,18 @@ exports.create = function (req, res) {
       });
     }],
     runCMD: ['createCMD', function (callback, results) {
+      if (!results.createCMD) {
+        callback();
+        return false;
+      }
+
       exec(results.createCMD, function (err, stdout) {
-        // if (err) {
-        //   err.type = 'system';
-        //   err.message = '执行 Stream 命令失败';
-        //   callback(err);
-        //   return false;
-        // }
+        if (err) {
+          err.type = 'system';
+          err.message = '执行 Stream 命令失败';
+          callback(err);
+          return false;
+        }
 
         callback(null, stdout);
       });
@@ -206,8 +274,6 @@ exports.create = function (req, res) {
 
     res.status(204).end();
   });
-
-
 };
 
 /**
