@@ -85,24 +85,10 @@ exports.runCMD = function (id, cmd, callback) {
     }
 
     server.on('close',function(code, signal){
-      if (err) {
-        err.type = 'system';
-        err.message = 'Stream 进程 Close';
-        callback(err);
-        return false;
-      }
-
       restart(signal);
     });
 
     server.on('error',function(code, signal){
-      if (err) {
-        err.type = 'system';
-        err.message = 'Stream 进程 Error';
-        callback(err);
-        return false;
-      }
-
       restart(signal);
     });
   }; startServer();
