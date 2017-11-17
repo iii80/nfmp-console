@@ -273,7 +273,7 @@ exports.create = function (req, res) {
  * @param {Object} res
  */
 exports.switch = function (req, res) {
-  req.checkParams({
+  req.checkBody({
     'id': {
       notEmpty: {
         options: [true],
