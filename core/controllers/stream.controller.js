@@ -252,7 +252,7 @@ exports.create = function (req, res) {
         return false;
       }
 
-      streamService.runCMD(results.writeData, results.createCMD);
+      // streamService.runCMD(results.writeData, results.createCMD);
 
       callback();
     }]
