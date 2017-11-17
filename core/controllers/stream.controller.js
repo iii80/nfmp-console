@@ -297,15 +297,14 @@ exports.switch = function (req, res) {
 
   fs.readFile(path.join(__dirname,'../../config/stream.json'), function (err, data) {
     if (err && data) {
-      err.type = 'system';
-      err.message = '获取 Stream 失败';
-      callback(err);
+      logger.system().error(__filename, '获取 Stream 失败', err);
+      res.status(400).end();
       return false;
     }
 
     var streamList = JSON.parse(data);
 
-    var result = _.find(streamList, { id: id });
+    var result = _.find(streamList, { id: req.body.id });
 
     _.pull(streamList, result);
 
@@ -316,7 +315,8 @@ exports.switch = function (req, res) {
     fs.writeFile(path.join(__dirname,'../../config/stream.json'), JSON.stringify(streamList), function (err) {
       if (err) {
         logger.system().error(__filename, '写入 Stream 失败', err);
-        return res.status(400).end();
+        res.status(400).end();
+        return false;
       }
 
       if (result.active) {
