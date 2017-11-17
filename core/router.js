@@ -54,7 +54,7 @@ module.exports = {
       }
     },
 
-    '/streamActive': {
+    '/streamSwitch': {
       put: 'stream.switch'
     },
 

@@ -295,9 +295,6 @@ exports.switch = function (req, res) {
     return res.status(400).end();
   }
 
-  console.log(req.body);
-  console.log('lalalala');
-
   fs.readFile(path.join(__dirname,'../../config/stream.json'), function (err, data) {
     if (err && data) {
       logger.system().error(__filename, '获取 Stream 失败', err);
