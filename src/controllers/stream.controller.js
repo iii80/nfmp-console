@@ -27,8 +27,8 @@ angular.module('controllers').controller('stream', ['$scope', '$state', '$stateP
      */
     $scope.switchActive = function (item) {
       item.active = !item.active;
-
-      $http.put('/api/streamSwitch', { id: item.id, active: item.active})
+console.log(item.id, item.active);
+      $http.put('/api/streamSwitch', { id: item.id, active: item.active })
         .then(function (res) {
         });
     };
