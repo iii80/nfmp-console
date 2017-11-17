@@ -323,7 +323,7 @@ exports.switch = function (req, res) {
       if (result.active) {
         streamService.runCMD(result.id, result.cmd);
       } else {
-        exec('kill -s 9 ' + )
+        exec('kill -s 9 ' + result.pid);
       }
 
       res.status(204).end();
