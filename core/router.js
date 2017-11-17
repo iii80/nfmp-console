@@ -54,6 +54,10 @@ module.exports = {
       }
     },
 
+    '/streamActive': {
+      put: 'stream.switch'
+    },
+
     // 网络
     '/network': {
       get: 'network.list',

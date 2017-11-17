@@ -23,6 +23,17 @@ angular.module('controllers').controller('stream', ['$scope', '$state', '$stateP
       });
 
     /**
+     * 激活关闭
+     */
+    $scope.switchActive = function (item) {
+      item.active = !item.active;
+
+      $http.put('/api/streamSwitch', { id: item.id, active: item.active})
+        .then(function (res) {
+        });
+    };
+
+    /**
      * 删除频道
      */
     $scope.deleteStream = function () {

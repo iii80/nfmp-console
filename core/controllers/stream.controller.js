@@ -4,9 +4,10 @@ var path = require('path');
 var _ = require('lodash');
 var async = require('async');
 var exec = require('child_process').exec;
-var spawn = require('child_process').spawn
+var spawn = require('child_process').spawn;
 var logger = require('../../lib/logger.lib');
 var networkService = require('../services/network.service');
+var streamService = require('../services/stream.service');
 
 /**
  * 转码信息
@@ -173,37 +174,7 @@ exports.create = function (req, res) {
         callback(err, result);
       });
     },
-    createCMD: ['mkdir', 'getNetwork', function (callback, results) {
-      var normal = 'ffmpeg -i ' + stream.url;
-      var cmd = '';
-
-      if (stream.muhicast && !stream.hls) {
-        cmd = normal +
-          ' -vcodec copy -acodec copy -f mpegts "' +
-          stream.outUrl +
-          '?localaddr=' +
-          results.getNetwork.address +
-          '"';
-      } else if (!stream.muhicast && stream.hls) {
-        cmd = normal +
-          ' -vcodec copy -acodec copy -f hls -hls_list_size 6 -hls_wrap 10 -hls_time 10 ' +
-          path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8');
-      } else if (stream.muhicast && stream.hls) {
-        cmd = normal +
-          ' -vcodec copy -acodec copy -f hls -hls_list_size 6 -hls_wrap 10 -hls_time 10 ' +
-          path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8') +
-          '-vcodec copy -acodec copy -f mpegts "' +
-          stream.outUrl +
-          '?localaddr=' +
-          results.getNetwork.address +
-          '"';
-      } else if (!stream.muhicast && !stream.hls) {
-        cmd = null;
-      }
-
-      callback(null, cmd);
-    }],
-    writeData: ['createCMD', function (callback, results) {
+    writeData: ['createCMD',  function (callback, results) {
       fs.readFile(path.join(__dirname,'../../config/stream.json'), function (err, data) {
         if (err && data) {
           err.type = 'system';
@@ -218,7 +189,6 @@ exports.create = function (req, res) {
           streamList = [];
 
           stream.id = '001';
-          stream.cmd = results.createCMD;
         } else {
           streamList = JSON.parse(data);
 
@@ -236,6 +206,16 @@ exports.create = function (req, res) {
           stream.id = _id;
         }
 
+        stream.cmd = results.createCMD;
+
+        if (results.createCMD) {
+          stream.active = true;
+          stream.cmd = results.runCMD;
+        } else {
+          stream.active = false;
+          stream.cmd = null;
+        }
+
         streamList.push(stream);
 
         fs.writeFile(path.join(__dirname,'../../config/stream.json'), JSON.stringify(streamList), function (err) {
@@ -246,41 +226,35 @@ exports.create = function (req, res) {
             return false;
           }
 
-          callback();
+          callback(null, stream.id);
         });
       });
     }],
-    runCMD: ['createCMD', function (callback, results) {
+    createCMD: ['mkdir', 'getNetwork', 'writeData', function (callback, results) {
+      var normal = ['-i', stream.url];
+      var cmd = [];
+
+      if (stream.muhicast && !stream.hls) {
+        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', '"' + stream.outUrl + '?localaddr=' + results.getNetwork.address + '"'])];
+      } else if (!stream.muhicast && stream.hls) {
+        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8')])];
+      } else if (stream.muhicast && stream.hls) {
+        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8'), '-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', '"' + stream.outUrl + '?localaddr=' + results.getNetwork.address + '"'])];
+      } else if (!stream.muhicast && !stream.hls) {
+        cmd = null;
+      }
+
+      callback(null, cmd);
+    }],
+    runCMD: ['createCMD', 'writeData', function (callback, results) {
       if (!results.createCMD) {
         callback();
         return false;
       }
 
-      server = spawn('ffmpeg',['-i','rtsp://183.59.160.61/PLTV/88888895/224/3221226706/00000100000000060000000000334083_0.smil','-vcodec','copy','-acodec','copy','-f','hls','-hls_list_size','6','-hls_wrap','10','-hls_time','10','/home/nfmp-console/public/stream/mmm/1.m3u8']);
-
-      console.log('pid', server.pid);
-
-      server.on('close',function(code, signal){
-        console.log('close', signal);
-      });
-      server.on('error',function(code, signal){
-        console.log('error', signal);
-      });
+      streamService.runCMD(results.writeData, results.createCMD);
 
       callback();
-
-      // exec(results.createCMD, function (err, stdout) {
-      //   if (err) {
-      //     err.type = 'system';
-      //     err.message = '执行 Stream 命令失败';
-      //     callback(err);
-      //     return false;
-      //   }
-      //
-      //   console.log(stdout);
-      //
-      //   callback(null, stdout);
-      // });
     }]
   }, function (err, results) {
     if (err) {
@@ -289,6 +263,71 @@ exports.create = function (req, res) {
     }
 
     res.status(204).end();
+  });
+};
+
+/**
+ * 开关
+ * @param {Object} req
+ *        {String} req.body.id
+ *        {String} req.body.active
+ * @param {Object} res
+ */
+exports.switch = function (req, res) {
+  req.checkParams({
+    'id': {
+      notEmpty: {
+        options: [true],
+        errorMessage: 'id 不能为空'
+      },
+      isString: { errorMessage: 'id 需为字符串' }
+    },
+    'active': {
+      notEmpty: {
+        options: [true],
+        errorMessage: 'active 不能为空'
+      },
+      isBoolean: { errorMessage: 'active 需为 boolean' }
+    }
+  });
+
+  if (req.validationErrors()) {
+    logger.system().error(__filename, '参数验证失败', req.validationErrors());
+    return res.status(400).end();
+  }
+
+  fs.readFile(path.join(__dirname,'../../config/stream.json'), function (err, data) {
+    if (err && data) {
+      err.type = 'system';
+      err.message = '获取 Stream 失败';
+      callback(err);
+      return false;
+    }
+
+    var streamList = JSON.parse(data);
+
+    var result = _.find(streamList, { id: id });
+
+    _.pull(streamList, result);
+
+    result.active = req.body.active;
+
+    streamList.push(result);
+
+    fs.writeFile(path.join(__dirname,'../../config/stream.json'), JSON.stringify(streamList), function (err) {
+      if (err) {
+        logger.system().error(__filename, '写入 Stream 失败', err);
+        return res.status(400).end();
+      }
+
+      if (result.active) {
+        streamService.runCMD(result.id, result.cmd);
+      } else {
+        exec('kill -s 9 ' + )
+      }
+
+      res.status(204).end();
+    });
   });
 };
 
@@ -364,9 +403,9 @@ exports.update = function (req, res) {
       }
     });
 
-    fs.writeFile(path.join(__dirname,'../../config/sources.json'), JSON.stringify(channelList), function (err) {
+    fs.writeFile(path.join(__dirname,'../../config/stream.json'), JSON.stringify(streamList), function (err) {
       if (err) {
-        logger.system().error(__filename, '写入 SOURCE 失败', err);
+        logger.system().error(__filename, '写入 Stream 失败', err);
         return res.status(400).end();
       }
 

@@ -48,11 +48,11 @@
           <td></td>
           <td></td>
           <td>
-            <i ng-class="{ 'fa-toggle-on text-success': item.active === true, 'fa-toggle-off text-muted': item.active === false }" ng-click="" class="fa fa-2x pointer"></i>
+            <i ng-class="{ 'fa-toggle-on text-success': item.active === true, 'fa-toggle-off text-muted': item.active === false }" ng-click="switchActive(item)" class="fa fa-2x pointer"></i>
           </td>
           <td>
-            <a ui-sref="main.stream.update({ _id: item.name })" class="btn btn-default btn-xs"><i class="fa fa-edit"></i> 修改</a>
-            <button ng-click="$parent.$parent.deleteChannelId = item.name" class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o"></i> 删除</button>
+            <!--<a ui-sref="main.stream.update({ _id: item.name })" class="btn btn-default btn-xs"><i class="fa fa-edit"></i> 修改</a>-->
+            <!--<button ng-click="$parent.$parent.deleteChannelId = item.name" class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o"></i> 删除</button>-->
           </td>
         </tr>
         </tbody>
