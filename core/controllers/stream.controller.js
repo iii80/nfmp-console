@@ -255,18 +255,16 @@ exports.create = function (req, res) {
         callback();
         return false;
       }
-
+console.log(results.createCMD);
       server = spawn(results.createCMD);
 
-      console.log(server.pid);
+      console.log('pid', server.pid);
 
       server.on('close',function(code, signal){
-        console.log(signal);
-        console.log('close');
+        console.log('close', signal);
       });
       server.on('error',function(code, signal){
-        console.log(signal);
-        console.log('error');
+        console.log('error', signal);
       });
 
       callback();
