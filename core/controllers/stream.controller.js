@@ -173,6 +173,22 @@ exports.create = function (req, res) {
         callback(err, result);
       });
     },
+    createCMD: ['mkdir', 'getNetwork', function (callback, results) {
+      var normal = ['-i', stream.url];
+      var cmd = [];
+
+      if (stream.muhicast && !stream.hls) {
+        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', '"' + stream.outUrl + '?localaddr=' + results.getNetwork.address + '"'])];
+      } else if (!stream.muhicast && stream.hls) {
+        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8')])];
+      } else if (stream.muhicast && stream.hls) {
+        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8'), '-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', '"' + stream.outUrl + '?localaddr=' + results.getNetwork.address + '"'])];
+      } else if (!stream.muhicast && !stream.hls) {
+        cmd = null;
+      }
+
+      callback(null, cmd);
+    }],
     writeData: ['createCMD',  function (callback, results) {
       fs.readFile(path.join(__dirname,'../../config/stream.json'), function (err, data) {
         if (err && data) {
@@ -205,14 +221,12 @@ exports.create = function (req, res) {
           stream.id = _id;
         }
 
-        stream.cmd = results.createCMD;
-
         if (results.createCMD) {
           stream.active = true;
-          stream.cmd = results.runCMD;
+          stream.cmd = results.createCMD;
         } else {
           stream.active = false;
-          stream.cmd = null;
+          stream.cmd = '';
         }
 
         streamList.push(stream);
@@ -228,22 +242,6 @@ exports.create = function (req, res) {
           callback(null, stream.id);
         });
       });
-    }],
-    createCMD: ['mkdir', 'getNetwork', function (callback, results) {
-      var normal = ['-i', stream.url];
-      var cmd = [];
-
-      if (stream.muhicast && !stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', '"' + stream.outUrl + '?localaddr=' + results.getNetwork.address + '"'])];
-      } else if (!stream.muhicast && stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8')])];
-      } else if (stream.muhicast && stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8'), '-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', '"' + stream.outUrl + '?localaddr=' + results.getNetwork.address + '"'])];
-      } else if (!stream.muhicast && !stream.hls) {
-        cmd = null;
-      }
-
-      callback(null, cmd);
     }],
     runCMD: ['createCMD', 'writeData', function (callback, results) {
       if (!results.createCMD) {
@@ -309,6 +307,10 @@ exports.switch = function (req, res) {
     _.pull(streamList, result);
 
     result.active = req.body.active;
+
+    if (!result.active) {
+      result.pid = '';
+    }
 
     streamList.push(result);
 
