@@ -230,7 +230,7 @@ exports.create = function (req, res) {
         });
       });
     }],
-    createCMD: ['mkdir', 'getNetwork', 'writeData', function (callback, results) {
+    createCMD: ['mkdir', 'getNetwork', function (callback, results) {
       var normal = ['-i', stream.url];
       var cmd = [];
 
@@ -252,7 +252,7 @@ exports.create = function (req, res) {
         return false;
       }
 
-      // streamService.runCMD(results.writeData, results.createCMD);
+      streamService.runCMD(results.writeData, results.createCMD);
 
       callback();
     }]
