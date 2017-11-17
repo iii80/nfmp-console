@@ -1,6 +1,7 @@
 var fs = require('fs');
 var _ = require('lodash');
 var spawn = require('child_process').spawn;
+var server = null;
 
 /**
  * 检查 Stream 是否激活
@@ -61,6 +62,7 @@ function writePid (id, pid, callback) {
  * @callback {Object} 网卡列表
  */
 exports.runCMD = function (id, cmd) {
+  console.log(id, cmd);
   function startServer() {
     server = spawn(cmd);
 
