@@ -10,6 +10,8 @@ var server = null;
  * @param callback
  */
 function checkActive(id, callback) {
+  callback = callback || function () {};
+
   fs.readFile(path.join(__dirname,'../../config/stream.json'), function (err, data) {
     if (err && data) {
       err.type = 'system';
@@ -27,6 +29,8 @@ function checkActive(id, callback) {
 }
 
 function writePid (id, pid, callback) {
+  callback = callback || function () {};
+
   fs.readFile(path.join(__dirname,'../../config/stream.json'), function (err, data) {
     if (err && data) {
       err.type = 'system';
@@ -52,6 +56,8 @@ function writePid (id, pid, callback) {
         callback(err);
         return false;
       }
+
+      callback();
     });
   });
 }
@@ -60,11 +66,13 @@ function writePid (id, pid, callback) {
  * 运行命令
  * @callback {Object} 网卡列表
  */
-exports.runCMD = function (id, cmd) {
+exports.runCMD = function (id, cmd, callback) {
+  callback = callback || function () {};
+
   function startServer() {
     server = spawn(cmd[0], cmd[1]);
 
-    writePid(id, server.pid);
+    writePid(id, server.pid, callback);
 
     function restart(signal) {
       server.kill(signal);
