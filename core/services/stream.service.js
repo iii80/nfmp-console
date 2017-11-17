@@ -62,9 +62,8 @@ function writePid (id, pid, callback) {
  * @callback {Object} 网卡列表
  */
 exports.runCMD = function (id, cmd) {
-  console.log(id, cmd);
   function startServer() {
-    server = spawn(cmd);
+    server = spawn(cmd[0], cmd[1]);
 
     writePid(id, server.pid);
 
