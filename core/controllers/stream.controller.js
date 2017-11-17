@@ -174,7 +174,7 @@ exports.create = function (req, res) {
       });
     },
     createCMD: ['mkdir', 'getNetwork', function (callback, results) {
-      var normal = '-i ' + stream.url;
+      var normal = 'ffmpeg -i ' + stream.url;
       var cmd = '';
 
       if (stream.muhicast && !stream.hls) {
@@ -256,16 +256,17 @@ exports.create = function (req, res) {
         return false;
       }
 
-      server = spawn('ffmpeg', [results.createCMD]);
+      server = spawn(results.createCMD);
 
       console.log(server.pid);
 
       server.on('close',function(code, signal){
         console.log(signal);
+        console.log('close');
       });
       server.on('error',function(code, signal){
-        server.kill(signal);
         console.log(signal);
+        console.log('error');
       });
 
       callback();
