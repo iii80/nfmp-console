@@ -256,7 +256,7 @@ exports.create = function (req, res) {
         return false;
       }
 
-      server = spawn(ffmpeg,['-i','rtsp://183.59.160.61/PLTV/88888895/224/3221226706/00000100000000060000000000334083_0.smil','-vcodec','copy','-acodec','copy','-f','hls','-hls_list_size','6','-hls_wrap','10','-hls_time','10','/home/nfmp-console/public/stream/mmm/1.m3u8']);
+      server = spawn('ffmpeg',['-i','rtsp://183.59.160.61/PLTV/88888895/224/3221226706/00000100000000060000000000334083_0.smil','-vcodec','copy','-acodec','copy','-f','hls','-hls_list_size','6','-hls_wrap','10','-hls_time','10','/home/nfmp-console/public/stream/mmm/1.m3u8']);
 
       console.log('pid', server.pid);
 
