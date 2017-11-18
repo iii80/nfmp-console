@@ -441,7 +441,7 @@ exports.update = function (req, res) {
       });
     },
     moveDir: ['loadStreams', function (callback, results) {
-      exec('mv ' + results.loadStreams.oldStream.name + ' ' + stream.name, function (err) {
+      exec('mv ' + path.join(__dirname, '../../public/stream/' + results.loadStreams.oldStream.name) + ' ' + path.join(__dirname, '../../public/stream/' + stream.name), function (err) {
         if (err) {
           err.type = 'system';
           err.message = 'MV文件夹失败';
