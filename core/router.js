@@ -48,6 +48,8 @@ module.exports = {
       post: 'streams.create',
 
       '/:_id': {
+        get: 'streams.one',
+        put: 'streams.update',
         delete: 'streams.remove'
       }
     },

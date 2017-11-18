@@ -37,14 +37,20 @@ angular.module('controllers').controller('streamsChange', ['$scope', '$state', '
       $scope.action = 'update';
       $scope.transmitting = true;
 
-      $http.get('/api/channel/' + $scope.id)
+      $http.get('/api/streams/' + $scope.id)
           .then(function (res) {
             var data = res.data;
 
-            $scope.id = data.name;
+            $scope.name = data.name;
             $scope.url = data.url;
-            $scope.source = data.source;
-            $scope.remark = data.remark;
+
+            if (data.hls) $scope.hls = data.hls;
+
+            if (data.muhicast) {
+              $scope.muhicast = data.muhicast
+              $scope.network = data.network;
+              $scope.outUrl = data.outUrl;
+            }
 
             $scope.transmitting = false;
           }, function () {
