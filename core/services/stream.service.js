@@ -24,7 +24,9 @@ function checkActive(id, callback) {
 
     var result = _.find(streamList, { id: id });
 
-    callback(result.active);
+    var active = result.pid ? true : false;
+
+    callback(active);
   });
 }
 

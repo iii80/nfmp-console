@@ -293,10 +293,8 @@ exports.create = function (req, res) {
         }
 
         if (results.createCMD) {
-          stream.active = true;
           stream.cmd = results.createCMD;
         } else {
-          stream.active = false;
           stream.cmd = '';
         }
 

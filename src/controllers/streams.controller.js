@@ -20,6 +20,10 @@ angular.module('controllers').controller('streams', ['$scope', '$state', '$state
         var data = res.data;
 
         $scope.stream = data;
+
+        _.map($scope.stream, function (item) {
+          item.pid ? item.active = true : item.active = false;
+        });
       });
 
     /**
