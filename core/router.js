@@ -47,7 +47,7 @@ module.exports = {
       get: 'streams.list',
       post: 'streams.create',
 
-      '/:_id': {
+      '/:id': {
         get: 'streams.one',
         put: 'streams.update',
         delete: 'streams.remove'
