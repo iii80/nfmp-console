@@ -83,7 +83,7 @@ angular.module('controllers').controller('streamsChange', ['$scope', '$state', '
       }
 
       if ($scope.id) {
-        $http.put('/api/streams' + $scope.id, stream)
+        $http.put('/api/streams/' + $scope.id, stream)
           .then(function () {
             $scope.$emit('notification', {
               type: 'success',
