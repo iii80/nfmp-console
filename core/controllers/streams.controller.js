@@ -434,7 +434,7 @@ exports.update = function (req, res) {
 
         if (oldStream.pid) exec('kill -s 9 ' + oldStream.pid);
 
-        callback({
+        callback(null, {
           streamsList: streamsList,
           oldStream: oldStream
         });
@@ -535,7 +535,6 @@ exports.update = function (req, res) {
     }]
   }, function (err, results) {
     if (err) {
-      console.log(err);
       logger[err.type]().error(__filename, err.message, err);
       return res.status(500).end();
     }
