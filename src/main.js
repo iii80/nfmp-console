@@ -78,29 +78,29 @@ angular.module('console', [
       })
 
       // 转码管理
-      .state('main.stream', {
-        url: '^/stream',
-        controller: 'stream',
+      .state('main.streams', {
+        url: '^/streams',
+        controller: 'streams',
         templateProvider: ['$templateCache', function($templateCache) {
-          return $templateCache.get('stream.view.html');
+          return $templateCache.get('streams.view.html');
         }]
       })
 
       // 新增转码
-      .state('main.stream.create', {
-        url: '^/stream/create',
-        controller: 'streamChange',
+      .state('main.streams.create', {
+        url: '^/streams/create',
+        controller: 'streamsChange',
         templateProvider: ['$templateCache', function($templateCache) {
-          return $templateCache.get('stream-change.view.html');
+          return $templateCache.get('streams-change.view.html');
         }]
       })
 
       // 更新转码
-      .state('main.stream.update', {
-        url: '^/stream/:_id',
-        controller: 'streamChange',
+      .state('main.streams.update', {
+        url: '^/streams/:_id',
+        controller: 'streamsChange',
         templateProvider: ['$templateCache', function($templateCache) {
-          return $templateCache.get('stream-change.view.html');
+          return $templateCache.get('streams-change.view.html');
         }]
       })
 

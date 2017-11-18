@@ -20,7 +20,7 @@
 <div ui-view class="view clearfix">
   <div class="page-header clearfix">
     <ol class="heading pull-left">
-      <li><a ui-sref="main.stream">转码管理</a></li>
+      <li><a ui-sref="main.streams">转码管理</a></li>
     </ol>
     <a ui-sref="main.stream.create" class="btn btn-primary btn-sm pull-right"><i class="fa fa-pencil"></i> 新增转码</a>
   </div>
@@ -32,9 +32,10 @@
           <th>频道ID</th>
           <th>频道名称</th>
           <th>输入地址</th>
-          <th>http/udp</th>
+          <th>格式</th>
+          <th>输入网卡</th>
+          <th>输出网卡</th>
           <th>输出地址</th>
-          <th>输出</th>
           <th>激活</th>
           <th>操作</th>
         </tr>
@@ -46,13 +47,13 @@
           <td>{{item.url}}</td>
           <td></td>
           <td></td>
-          <td></td>
+          <td>{{item.outUrl}}</td>
           <td>
             <i ng-class="{ 'fa-toggle-on text-success': item.active === true, 'fa-toggle-off text-muted': item.active === false }" ng-click="switchActive(item)" class="fa fa-2x pointer"></i>
           </td>
           <td>
-            <!--<a ui-sref="main.stream.update({ _id: item.name })" class="btn btn-default btn-xs"><i class="fa fa-edit"></i> 修改</a>-->
-            <!--<button ng-click="$parent.$parent.deleteChannelId = item.name" class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o"></i> 删除</button>-->
+            <a ui-sref="main.stream.update({ id: item.name })" class="btn btn-default btn-xs"><i class="fa fa-edit"></i> 修改</a>
+            <button ng-click="$parent.$parent.deleteStreamId = item.id" class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o"></i> 删除</button>
           </td>
         </tr>
         </tbody>

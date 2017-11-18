@@ -1,7 +1,7 @@
 /**
  * Stream Controller
  */
-angular.module('controllers').controller('stream', ['$scope', '$state', '$stateParams', '$http',
+angular.module('controllers').controller('streams', ['$scope', '$state', '$stateParams', '$http',
   function ($scope, $state, $stateParams, $http) {
     'use strict';
 
@@ -15,7 +15,7 @@ angular.module('controllers').controller('stream', ['$scope', '$state', '$stateP
     /**
      * 读取频道列表
      */
-    $http.get('/api/stream')
+    $http.get('/api/streams')
       .then(function (res) {
         var data = res.data;
 
@@ -43,18 +43,18 @@ angular.module('controllers').controller('stream', ['$scope', '$state', '$stateP
     };
 
     /**
-     * 删除频道
+     * 删除转码
      */
     $scope.deleteStream = function () {
       $scope.transmitting = true;
 
-      $http.delete('/api/stream/' + $scope.deleteStreamId)
+      $http.delete('/api/streams/' + $scope.deleteStreamId)
         .then(function () {
           $('#deleteModal').modal('hide');
 
           $scope.transmitting = false;
 
-          $scope.stream = _.reject($scope.stream, { name:  $scope.deleteStreamId });
+          $scope.stream = _.reject($scope.stream, { id:  $scope.deleteStreamId });
 
           return $scope.$emit('notification', {
             type: 'success',

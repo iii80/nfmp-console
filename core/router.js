@@ -43,19 +43,17 @@ module.exports = {
     },
 
     // 转码
-    '/stream': {
-      get: 'stream.list',
-      post: 'stream.create',
+    '/streams': {
+      get: 'streams.list',
+      post: 'streams.create',
 
       '/:_id': {
-        get: 'channel.one',
-        put: 'channel.update',
-        delete: 'channel.remove'
+        delete: 'streams.remove'
       }
     },
 
     '/streamSwitch': {
-      put: 'stream.switch'
+      put: 'streams.switch'
     },
 
     // 网络

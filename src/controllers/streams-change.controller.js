@@ -1,7 +1,7 @@
 /**
  * Stream Change Controller
  */
-angular.module('controllers').controller('streamChange', ['$scope', '$state', '$stateParams', '$http',
+angular.module('controllers').controller('streamsChange', ['$scope', '$state', '$stateParams', '$http',
   function ($scope, $state, $stateParams, $http) {
     'use strict';
 
@@ -10,7 +10,7 @@ angular.module('controllers').controller('streamChange', ['$scope', '$state', '$
      */
     $scope.transmitting = false;
     $scope.action = 'create';
-    $scope._id = $stateParams._id;
+    $scope.id = $stateParams.id;
     $scope.name = '';
     $scope.url = '';
     $scope.outUrl = 'udp://';
@@ -33,15 +33,15 @@ angular.module('controllers').controller('streamChange', ['$scope', '$state', '$
     /**
      * 读取频道
      */
-    if ($scope._id) {
+    if ($scope.id) {
       $scope.action = 'update';
       $scope.transmitting = true;
 
-      $http.get('/api/channel/' + $scope._id)
+      $http.get('/api/channel/' + $scope.id)
           .then(function (res) {
             var data = res.data;
 
-            $scope._id = data.name;
+            $scope.id = data.name;
             $scope.url = data.url;
             $scope.source = data.source;
             $scope.remark = data.remark;
@@ -76,30 +76,30 @@ angular.module('controllers').controller('streamChange', ['$scope', '$state', '$
         stream.outUrl = $scope.outUrl;
       }
 
-      if ($scope._id) {
-        // $http.put('/api/channel/' + $scope._id, channel)
-        //     .then(function () {
-        //       $scope.$emit('notification', {
-        //         type: 'success',
-        //         message: '更新频道成功'
-        //       });
-        //
-        //       $state.go('main.channel', null, { reload: 'main.channel' });
-        //     }, function () {
-        //       $scope.$emit('notification', {
-        //         type: 'danger',
-        //         message: '创建频道失败'
-        //       });
-        //     });
+      if ($scope.id) {
+        $http.put('/api/streams' + $scope.id, stream)
+          .then(function () {
+            $scope.$emit('notification', {
+              type: 'success',
+              message: '更新转码成功'
+            });
+
+            $state.go('main.streams', null, { reload: 'main.streams' });
+          }, function () {
+            $scope.$emit('notification', {
+              type: 'danger',
+              message: '更新转码失败'
+            });
+          });
       } else {
-        $http.post('/api/stream', stream)
+        $http.post('/api/streams', stream)
             .then(function () {
               $scope.$emit('notification', {
                 type: 'success',
                 message: '创建转码成功'
               });
 
-              $state.go('main.stream', null, { reload: 'main.stream' });
+              $state.go('main.streams', null, { reload: 'main.streams' });
             }, function () {
               $scope.$emit('notification', {
                 type: 'danger',
