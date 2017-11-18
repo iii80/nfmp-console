@@ -42,7 +42,7 @@ exports.one = function (req, res) {
     }
 
     var stream = JSON.parse(data);
-    var item = _.find(stream, { name: id });
+    var item = _.find(stream, { id: id });
 
     res.status(200).json(item);
   });
