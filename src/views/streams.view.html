@@ -53,7 +53,7 @@
             <i ng-class="{ 'fa-toggle-on text-success': item.active === true, 'fa-toggle-off text-muted': item.active === false }" ng-click="switchActive(item)" class="fa fa-2x pointer"></i>
           </td>
           <td>
-            <a ui-sref="main.streams.update({ id: item.name })" class="btn btn-default btn-xs"><i class="fa fa-edit"></i> 修改</a>
+            <a ui-sref="main.streams.update({ id: item.id })" class="btn btn-default btn-xs"><i class="fa fa-edit"></i> 修改</a>
             <button ng-click="$parent.$parent.deleteStreamId = item.id" class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o"></i> 删除</button>
           </td>
         </tr>
