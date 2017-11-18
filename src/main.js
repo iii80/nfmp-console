@@ -97,7 +97,7 @@ angular.module('console', [
 
       // 更新转码
       .state('main.streams.update', {
-        url: '^/streams/:_id',
+        url: '^/streams/:id',
         controller: 'streamsChange',
         templateProvider: ['$templateCache', function($templateCache) {
           return $templateCache.get('streams-change.view.html');
