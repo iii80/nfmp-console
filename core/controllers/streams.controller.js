@@ -512,7 +512,7 @@ exports.update = function (req, res) {
       var newStreamList = results.loadStreams.streamsList;
 
       _.map(newStreamList, function (item) {
-        if (item.name === id) {
+        if (item.id === id) {
           item = newStream;
         }
       });
@@ -525,7 +525,7 @@ exports.update = function (req, res) {
           return false;
         }
 
-        callback(null, stream.id);
+        callback();
       });
     }],
     runCMD: ['createCMD', 'writeData', function (callback, results) {
@@ -534,7 +534,7 @@ exports.update = function (req, res) {
         return false;
       }
 
-      streamService.runCMD(results.writeData, results.createCMD);
+      streamService.runCMD(id, results.createCMD);
 
       callback();
     }]
