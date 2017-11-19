@@ -280,7 +280,7 @@ exports.create = function (req, res) {
 
         var streamList;
 
-        if (!data) {
+        if (!data || data === []) {
           streamList = [];
 
           stream.id = '001';
