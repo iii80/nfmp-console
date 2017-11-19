@@ -48,7 +48,7 @@ exports.keyMac = function (req, res) {
         key = JSON.parse(data).key;
 
 
-        if (key === sha1(sha1(addr))) {
+        if (key === sha1(sha1(addr) + '948372')) {
           return res.status(204).end();
         } else {
           res.status(401).json({
