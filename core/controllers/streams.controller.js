@@ -611,7 +611,7 @@ exports.remove = function (req, res) {
         return res.status(400).end();
       }
 
-      fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(streamList), function (err) {
+      fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(newStreamList), function (err) {
         if (err) {
           logger.system().error(__filename, '写入 Stream 失败', err);
           return res.status(400).end();
