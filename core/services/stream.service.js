@@ -85,6 +85,10 @@ exports.runCMD = function (id, cmd, callback) {
     writePid(id, server.pid, callback);
 
     function restart(signal) {
+      if (!signal) {
+        return false;
+      }
+
       server.kill(signal);
 
       setTimeout(function () {
