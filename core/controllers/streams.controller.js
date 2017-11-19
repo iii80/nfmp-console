@@ -127,7 +127,7 @@ exports.switch = function (req, res) {
         res.status(400).end();
         return false;
       }
-
+console.log(req.body);
       if (req.body.active) {
         streamService.runCMD(result.id, result.cmd);
       } else {
