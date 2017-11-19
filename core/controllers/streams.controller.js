@@ -113,8 +113,6 @@ exports.switch = function (req, res) {
 
     _.pull(streamList, result);
 
-    result.active = req.body.active;
-
     var _pid = result.pid;
 
     if (!result.active) {
