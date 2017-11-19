@@ -44,13 +44,14 @@
         <tr ng-repeat="item in stream">
           <td>{{item.id}}</td>
           <td>{{item.name}}</td>
-          <td>{{item.url}}</td>
+          <td>{{item.url | words: 20}}</td>
           <td></td>
           <td></td>
           <td>{{item.network ? item.network : '-'}}</td>
           <td>{{item.outUrl ? item.outUrl : '-'}}</td>
           <td>
-            <i nf-if="item.pid" ng-class="{ 'fa-toggle-on text-success': item.active === true, 'fa-toggle-off text-muted': item.active === false }" ng-click="switchActive(item)" class="fa fa-2x pointer"></i>
+            <i ng-if="item.pid" ng-class="{ 'fa-toggle-on text-success': item.active === true, 'fa-toggle-off text-muted': item.active === false }" ng-click="switchActive(item)" class="fa fa-2x pointer"></i>
+            <span ng-if="!item.pid">-</span>
           </td>
           <td>
             <a ui-sref="main.streams.update({ id: item.id })" class="btn btn-default btn-xs"><i class="fa fa-edit"></i> 修改</a>
