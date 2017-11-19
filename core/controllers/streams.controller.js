@@ -281,7 +281,7 @@ exports.create = function (req, res) {
 
         var streamList;
 
-        if (!data || JSON.parse(data) === []) {
+        if (!data || JSON.parse(data).length === 0) {
           streamList = [];
 
           stream.id = '001';
