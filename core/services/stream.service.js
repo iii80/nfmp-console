@@ -84,13 +84,7 @@ exports.runCMD = function (id, cmd, callback) {
 
     writePid(id, server.pid, callback);
 
-    function restart(signal) {
-      if (!signal) {
-        return false;
-      }
-
-      server.kill(signal);
-
+    function restart() {
       setTimeout(function () {
         checkActive(id, function (active) {
           if (active) server = startServer(id, cmd);
@@ -98,18 +92,21 @@ exports.runCMD = function (id, cmd, callback) {
       }, 3000);
     }
 
-    server.stderr.on('data', function (data) {
-      console.log(data.toString());
+    server.on('close',function(code){
+      console.log('子进程Close：' + code);
+      restart();
     });
 
-    server.on('close',function(code, signal){
-      console.log('close', code, signal);
-      restart(signal);
+    server.on('exit', function (code) {
+      console.log('子进程Exit：' + code);
+      restart();
     });
 
     server.on('error',function(code, signal){
-      console.log('error', code, signal);
-      restart(signal);
+      console.log('子进程Error：' + code, signal);
+
+      server.kill(signal);
+      restart();
     });
   }; startServer();
 };
