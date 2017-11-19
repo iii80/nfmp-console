@@ -44,9 +44,9 @@
         <tr ng-repeat="item in stream">
           <td>{{item.id}}</td>
           <td>{{item.name}}</td>
-          <td>{{item.url | words: 20}}</td>
-          <td></td>
-          <td></td>
+          <td>{{item.url | words: 40}}</td>
+          <td>{{translatePre(item.url)}}</td>
+          <td>{{item.inNetwork ? item.inNetwork : '-'}}</td>
           <td>{{item.network ? item.network : '-'}}</td>
           <td>{{item.outUrl ? item.outUrl : '-'}}</td>
           <td>

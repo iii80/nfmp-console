@@ -16,9 +16,9 @@ angular.module('controllers').controller('streamsChange', ['$scope', '$state', '
     $scope.outUrl = 'udp://';
     $scope.hls = false;
     $scope.muhicast = false;
-
     $scope.network = {};
     $scope.networkName = '';
+    $scope.inNetworkName = '';
 
     /**
      * 读取网卡信息
@@ -44,11 +44,13 @@ angular.module('controllers').controller('streamsChange', ['$scope', '$state', '
             $scope.name = data.name;
             $scope.url = data.url;
 
+            if (data.inNetwork) $scope.networkName = data.inNetwork;
+
             if (data.hls) $scope.hls = data.hls;
 
             if (data.muhicast) {
               $scope.muhicast = data.muhicast
-              $scope.network = data.network;
+              $scope.networkName = data.network;
               $scope.outUrl = data.outUrl;
             }
 
@@ -71,6 +73,13 @@ angular.module('controllers').controller('streamsChange', ['$scope', '$state', '
         name: $scope.name,
         url: $scope.url
       };
+
+      var reg = /^(\w+)\:\/\//;
+      var pre = _.get(stream.url.match(reg), [1]);
+
+      if (pre) {
+        stream.inNetwork = $scope.inNetworkName;
+      }
 
       if ($scope.hls) {
         stream.hls = true;

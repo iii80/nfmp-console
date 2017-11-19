@@ -13,6 +13,15 @@ angular.module('controllers').controller('streams', ['$scope', '$state', '$state
     $scope.stream = [];
 
     /**
+     * 格式
+     */
+    $scope.translatePre = function (url) {
+      var reg = /^(\w+)\:\/\//;
+      var pre = _.get(url.match(reg), [1], '-');
+      return pre;
+    };
+
+    /**
      * 读取频道列表
      */
     $http.get('/api/streams')

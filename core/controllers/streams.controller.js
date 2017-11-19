@@ -100,8 +100,6 @@ exports.switch = function (req, res) {
     return res.status(400).end();
   }
 
-  console.log(req.body);
-
   fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
     if (err && data) {
       logger.system().error(__filename, '获取 Stream 失败', err);
@@ -166,13 +164,17 @@ exports.create = function (req, res) {
     }
   });
 
+  if (req.body.inNetwork) {
+    req.checkBody({
+      'inNetwork': {
+        isString: { errorMessage: 'inNetwork 需为字符串' }
+      }
+    });
+  }
+
   if (req.body.hls) {
     req.checkBody({
       'hls': {
-        notEmpty: {
-          options: [true],
-          errorMessage: 'hls 不能为空'
-        },
         isBoolean: { errorMessage: 'hls 需为Boolean' }
       }
     });
@@ -181,10 +183,6 @@ exports.create = function (req, res) {
   if (req.body.muhicast) {
     req.checkBody({
       'muhicast': {
-        notEmpty: {
-          options: [true],
-          errorMessage: 'muhicast 不能为空'
-        },
         isBoolean: { errorMessage: 'muhicast 需为Boolean' }
       },
       'network': {
@@ -213,6 +211,10 @@ exports.create = function (req, res) {
     name: req.body.name,
     url: req.body.url
   };
+
+  if (req.body.inNetwork) {
+    stream.inNetwork = req.body.inNetwork;
+  }
 
   if (req.body.hls) {
     stream.hls = true;
@@ -245,7 +247,14 @@ exports.create = function (req, res) {
       });
     },
     createCMD: ['mkdir', 'getNetwork', function (callback, results) {
-      var normal = ['-i', stream.url];
+      var normal = [];
+
+      if (stream.inNetwork) {
+        normal = ['-i', '"' + stream.url + '?source=' + stream.inNetwork  + '"'];
+      } else {
+        normal = ['-i', '"' + stream.url + '"'];
+      }
+
       var cmd = [];
 
       if (stream.muhicast && !stream.hls) {
@@ -356,13 +365,17 @@ exports.update = function (req, res) {
     }
   });
 
+  if (req.body.inNetwork) {
+    req.checkBody({
+      'inNetwork': {
+        isString: { errorMessage: 'inNetwork 需为字符串' }
+      }
+    });
+  }
+
   if (req.body.hls) {
     req.checkBody({
       'hls': {
-        notEmpty: {
-          options: [true],
-          errorMessage: 'hls 不能为空'
-        },
         isBoolean: { errorMessage: 'hls 需为Boolean' }
       }
     });
@@ -371,10 +384,6 @@ exports.update = function (req, res) {
   if (req.body.muhicast) {
     req.checkBody({
       'muhicast': {
-        notEmpty: {
-          options: [true],
-          errorMessage: 'muhicast 不能为空'
-        },
         isBoolean: { errorMessage: 'muhicast 需为Boolean' }
       },
       'network': {
@@ -405,6 +414,10 @@ exports.update = function (req, res) {
     name: req.body.name,
     url: req.body.url
   };
+
+  if (req.body.inNetwork) {
+    stream.inNetwork = req.body.inNetwork;
+  }
 
   if (req.body.hls) {
     stream.hls = true;
@@ -468,7 +481,14 @@ exports.update = function (req, res) {
       });
     },
     createCMD: ['moveDir', 'getNetwork', function (callback, results) {
-      var normal = ['-i', stream.url];
+      var normal = [];
+
+      if (stream.inNetwork) {
+        normal = ['-i', '"' + stream.url + '?source=' + stream.inNetwork  + '"'];
+      } else {
+        normal = ['-i', '"' + stream.url + '"'];
+      }
+
       var cmd = [];
 
       if (stream.muhicast && !stream.hls) {
@@ -496,6 +516,10 @@ exports.update = function (req, res) {
 
       newStream.name = stream.name;
       newStream.url = stream.url;
+
+      if (req.body.inNetwork) {
+        newStream.inNetwork = stream.inNetwork;
+      }
 
       if (req.body.hls) {
         newStream.hls = stream.hls;
