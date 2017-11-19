@@ -94,12 +94,8 @@ exports.runCMD = function (id, cmd, callback) {
 
     server.on('close',function(code){
       console.log('子进程Close：' + code);
-      restart();
-    });
 
-    server.on('exit', function (code) {
-      console.log('子进程Exit：' + code);
-      restart();
+      writePid(id, '');
     });
 
     server.on('error',function(code, signal){
