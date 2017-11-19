@@ -101,7 +101,7 @@ exports.keyValue = function (req, res) {
       return res.status(400).end();
     }
 
-    if (keyValue === sha1(sha1(addr))) {
+    if (keyValue === sha1(sha1(addr) + '948372')) {
       fs.writeFile(path.join(__dirname,'../../config/key.json'), JSON.stringify({ "key": keyValue }), function (err) {
         if (err) {
           logger.system().error(__filename, '写入 SOURCE 失败', err);
