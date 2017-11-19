@@ -4,7 +4,7 @@
 Thumbs.db
 npm-debug.log
 config/sources.json
-config/stream.json
+config/streams.json
 config/key.json
 !.gitkeep
 
