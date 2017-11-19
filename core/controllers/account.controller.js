@@ -107,9 +107,7 @@ exports.keyValue = function (req, res) {
           logger.system().error(__filename, '写入 SOURCE 失败', err);
           return res.status(400).end();
         }
-
-        console.log(keyValue);
-
+        
         res.status(204).end();
       });
     } else {
