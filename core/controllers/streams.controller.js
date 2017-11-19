@@ -603,13 +603,20 @@ exports.remove = function (req, res) {
 
     if (oldPid) exec('kill -s 9 ' + oldPid);
 
-    fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(newStream), function (err) {
+    rimraf(path.join(__dirname, '../../public/stream/' + newStream.name), function (err) {
       if (err) {
-        logger.system().error(__filename, '写入 Stream 失败', err);
+        logger.system().error(__filename, '获取 Stream 失败', err);
         return res.status(400).end();
       }
 
-      res.status(204).end();
+      fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(newStream), function (err) {
+        if (err) {
+          logger.system().error(__filename, '写入 Stream 失败', err);
+          return res.status(400).end();
+        }
+
+        res.status(204).end();
+      });
     });
   });
 };
