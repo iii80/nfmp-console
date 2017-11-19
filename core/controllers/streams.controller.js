@@ -115,7 +115,7 @@ exports.switch = function (req, res) {
 
     var _pid = result.pid;
 
-    if (!result.active) {
+    if (!req.body.active) {
       result.pid = '';
     }
 
@@ -128,7 +128,7 @@ exports.switch = function (req, res) {
         return false;
       }
 
-      if (result.active) {
+      if (req.body.active) {
         streamService.runCMD(result.id, result.cmd);
       } else {
         exec('kill -s 9 ' + _pid);
