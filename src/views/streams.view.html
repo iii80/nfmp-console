@@ -50,8 +50,8 @@
           <td>{{item.network ? item.network : '-'}}</td>
           <td>{{item.outUrl ? item.outUrl : '-'}}</td>
           <td>
-            <i ng-if="item.pid" ng-class="{ 'fa-toggle-on text-success': item.active === true, 'fa-toggle-off text-muted': item.active === false }" ng-click="switchActive(item)" class="fa fa-2x pointer"></i>
-            <span ng-if="!item.pid">-</span>
+            <i ng-if="item.hls || item.muhicast" ng-class="{ 'fa-toggle-on text-success': item.active === true, 'fa-toggle-off text-muted': item.active === false }" ng-click="switchActive(item)" class="fa fa-2x pointer"></i>
+            <span ng-if="!item.hls && !item.muhicast">-</span>
           </td>
           <td>
             <a ui-sref="main.streams.update({ id: item.id })" class="btn btn-default btn-xs"><i class="fa fa-edit"></i> 修改</a>
