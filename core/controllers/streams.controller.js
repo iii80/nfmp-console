@@ -1,5 +1,6 @@
 var fs = require('fs');
 var mkdirp = require('mkdirp');
+var rimraf = require('rimraf');
 var path = require('path');
 var _ = require('lodash');
 var async = require('async');
