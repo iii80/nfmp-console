@@ -26,9 +26,9 @@ module.exports = {
     },
 
     // 检查是否登录
-    // '/*': {
-    //   all: 'account.check'
-    // },
+    '/*': {
+      all: 'account.check'
+    },
 
     // 频道
     '/channel': {

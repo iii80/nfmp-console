@@ -38,20 +38,37 @@ exports.keyMac = function (req, res) {
       return res.status(400).end();
     }
 
-    if (data) {
-      key = JSON.parse(data).key;
+    getmac.getMac(function (err, addr) {
+      if (err) {
+        logger.system().error(__filename, '获取 MAC 地址失败');
+        return res.status(400).end();
+      }
 
-      return res.status(204).end();
-    } else {
-      getmac.getMac(function (err, addr) {
-        if (err) {
-          logger.system().error(__filename, '获取 MAC 地址失败');
-          return res.status(400).end();
+      if (data) {
+        key = JSON.parse(data).key;
+
+
+        if (key === sha1(sha1(addr))) {
+          return res.status(204).end();
+        } else {
+          res.status(401).json({
+            error: {
+              code: 'WRONG_KEYVALUE',
+              message: '序列号错误'
+            }
+          });
         }
+      } else {
+        getmac.getMac(function (err, addr) {
+          if (err) {
+            logger.system().error(__filename, '获取 MAC 地址失败');
+            return res.status(400).end();
+          }
 
-        res.status(200).json(sha1(addr));
-      });
-    }
+          res.status(200).json(sha1(addr));
+        });
+      }
+    });
   });
 };
 
