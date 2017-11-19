@@ -598,19 +598,20 @@ exports.remove = function (req, res) {
       return res.status(400).end();
     }
 
-    var stream = JSON.parse(data);
-    var oldPid = _.get(_.find(stream, { id: req.params.id }), 'pid');
-    var newStream = _.reject(stream, { id: req.params.id });
+    var streamList = JSON.parse(data);
+    var oldStream = _.find(streamList, { id: req.params.id });
+    var oldPid = _.get(oldStream, 'pid');
+    var newStreamList = _.reject(streamList, { id: req.params.id });
 
     if (oldPid) exec('kill -s 9 ' + oldPid);
 
-    rimraf(path.join(__dirname, '../../public/stream/' + newStream.name), function (err) {
+    rimraf(path.join(__dirname, '../../public/stream/' + oldStream.name), function (err) {
       if (err) {
         logger.system().error(__filename, '获取 Stream 失败', err);
         return res.status(400).end();
       }
 
-      fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(newStream), function (err) {
+      fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(streamList), function (err) {
         if (err) {
           logger.system().error(__filename, '写入 Stream 失败', err);
           return res.status(400).end();
