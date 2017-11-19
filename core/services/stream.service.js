@@ -95,10 +95,12 @@ exports.runCMD = function (id, cmd, callback) {
     }
 
     server.on('close',function(code, signal){
+      console.log('close', code, signal);
       restart(signal);
     });
 
     server.on('error',function(code, signal){
+      console.log('error', code, signal);
       restart(signal);
     });
   }; startServer();
