@@ -598,8 +598,8 @@ exports.remove = function (req, res) {
     }
 
     var stream = JSON.parse(data);
-    var oldPid = _.find(stream, { name: req.body.id }).pid;
-    var newStream = _.reject(stream, { name: req.body.id });
+    var oldPid = _.get(_.find(stream, { name: req.params.id }), 'pid');
+    var newStream = _.reject(stream, { name: req.params.id });
 
     if (oldPid) exec('kill -s 9 ' + oldPid);
 
