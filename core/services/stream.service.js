@@ -99,7 +99,7 @@ exports.runCMD = function (id, cmd, callback) {
     }
 
     server.stderr.on('data', function (data) {
-      console.log(data);
+      console.log(data.toString());
     });
 
     server.on('close',function(code, signal){
