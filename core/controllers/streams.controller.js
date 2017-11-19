@@ -100,6 +100,8 @@ exports.switch = function (req, res) {
     return res.status(400).end();
   }
 
+  console.log(req.body);
+
   fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
     if (err && data) {
       logger.system().error(__filename, '获取 Stream 失败', err);
@@ -127,7 +129,7 @@ exports.switch = function (req, res) {
         res.status(400).end();
         return false;
       }
-console.log(req.body);
+
       if (req.body.active) {
         streamService.runCMD(result.id, result.cmd);
       } else {
