@@ -80,7 +80,10 @@ exports.runCMD = function (id, cmd, callback) {
   callback = callback || function () {};
 
   function startServer() {
-    server = spawn(cmd[0], cmd[1]);
+    server = spawn(cmd[0], cmd[1], {
+      cwd: null,
+      env: null
+    });
 
     writePid(id, server.pid, callback);
 
