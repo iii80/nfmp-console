@@ -94,14 +94,6 @@ exports.runCMD = function (id, cmd, callback) {
       }, 3000);
     }
 
-    server.stdout.on('data', function (data) {
-      console.log(data.toString());
-    });
-
-    server.stderr.on('data', function (data) {
-      console.log(data.toString());
-    });
-
     server.on('close',function(code){
       console.log('子进程Close：' + code);
 
