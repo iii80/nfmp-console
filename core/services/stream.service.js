@@ -92,6 +92,10 @@ exports.runCMD = function (id, cmd, callback) {
       }, 3000);
     }
 
+    server.stdout.on('data', function (data) {
+      console.log(data);
+    });
+
     server.on('close',function(code){
       console.log('子进程Close：' + code);
 
