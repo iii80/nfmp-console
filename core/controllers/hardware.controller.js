@@ -108,5 +108,5 @@ exports.information = function (socket) {
 
       socket.emit('hardware', output);
     });
-  }, 10);
+  }, 100);
 };
