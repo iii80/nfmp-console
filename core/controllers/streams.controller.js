@@ -229,7 +229,7 @@ exports.create = function (req, res) {
 
   async.auto({
     mkdir: function (callback) {
-      mkdirp(path.join(__dirname, '../../public/stream/' + stream.name), function (err) {
+      mkdirp(path.join(__dirname, '../../public/assets/streams/' + stream.name), function (err) {
         if (err) err.type = 'system';
 
         callback(err);
@@ -261,9 +261,9 @@ exports.create = function (req, res) {
       if (stream.muhicast && !stream.hls) {
         cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', '"' + stream.outUrl + '?localaddr=' + results.getNetwork.address + '"'])];
       } else if (!stream.muhicast && stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8')])];
+        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/assets/streams/' + stream.name  + '/1.m3u8')])];
       } else if (stream.muhicast && stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8'), '-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', '"' + stream.outUrl + '?localaddr=' + results.getNetwork.address + '"'])];
+        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/assets/streams/' + stream.name  + '/1.m3u8'), '-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', '"' + stream.outUrl + '?localaddr=' + results.getNetwork.address + '"'])];
       } else if (!stream.muhicast && !stream.hls) {
         cmd = null;
       }
@@ -458,7 +458,7 @@ exports.update = function (req, res) {
         return false;
       }
 
-      exec('mv ' + path.join(__dirname, '../../public/stream/' + results.loadStreams.oldStream.name) + ' ' + path.join(__dirname, '../../public/stream/' + stream.name), function (err) {
+      exec('mv ' + path.join(__dirname, '../../public/assets/streams/' + results.loadStreams.oldStream.name) + ' ' + path.join(__dirname, '../../public/assets/streams/' + stream.name), function (err) {
         if (err) {
           err.type = 'system';
           err.message = 'MV文件夹失败';
@@ -495,9 +495,9 @@ exports.update = function (req, res) {
       if (stream.muhicast && !stream.hls) {
         cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', '"' + stream.outUrl + '?localaddr=' + results.getNetwork.address + '"'])];
       } else if (!stream.muhicast && stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8')])];
+        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/assets/streams/' + stream.name  + '/1.m3u8')])];
       } else if (stream.muhicast && stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/stream/' + stream.name  + '/1.m3u8'), '-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', '"' + stream.outUrl + '?localaddr=' + results.getNetwork.address + '"'])];
+        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '6', '-hls_wrap', '10', '-hls_time', '10', path.join(__dirname, '../../public/assets/streams/' + stream.name  + '/1.m3u8'), '-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', '"' + stream.outUrl + '?localaddr=' + results.getNetwork.address + '"'])];
       } else if (!stream.muhicast && !stream.hls) {
         cmd = null;
       }
@@ -605,7 +605,7 @@ exports.remove = function (req, res) {
 
     if (oldPid) exec('kill -s 9 ' + oldPid);
 
-    rimraf(path.join(__dirname, '../../public/stream/' + oldStream.name), function (err) {
+    rimraf(path.join(__dirname, '../../public/assets/streams/' + oldStream.name), function (err) {
       if (err) {
         logger.system().error(__filename, '获取 Stream 失败', err);
         return res.status(400).end();

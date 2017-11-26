@@ -9364,7 +9364,7 @@
      *
      * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
      * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
-     * var source = new EventSource('/stream');
+     * var source = new EventSource('/streams');
      * jQuery(source).on('message', debounced);
      *
      * // Cancel the trailing debounced invocation.
