@@ -123,11 +123,14 @@ setInterval(function () {
  * @param {Object} res
  */
 exports.information = function (socket) {
-  var output = {
-    cpu: cpu,
-    mem: mem,
-    network: network
-  };
+  console.log(1);
+  setInterval(function () {
+    var output = {
+      cpu: cpu,
+      mem: mem,
+      network: network
+    };
 
-  socket.emit('hardware', output);
+    socket.emit('hardware', output);
+  }, 50);
 };
