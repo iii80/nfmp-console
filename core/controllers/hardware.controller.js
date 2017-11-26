@@ -11,7 +11,7 @@ var oldListData = [];
 var network = [];
 var cpu = {};
 var mem = {};
-var network = {};
+var network = [];
 
 /**
  * 获取硬件信息
