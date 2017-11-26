@@ -4,11 +4,44 @@ var fs = require('fs');
 var ps = require('current-processes');
 var async = require('async');
 var _ = require('lodash');
+var spawn = require('child_process').spawn;
 var logger = require('../../lib/logger.lib');
 
-var memTotal = os.totalmem();
+// var memTotal = os.totalmem();
 var oldListData = [];
 var currData = [];
+var memory = {};
+
+/**
+ * 获取内存信息
+ */
+var prc = spawn('free', []);
+prc.stdout.setEncoding('utf8');
+prc.stdout.on('data', function (data) {
+  var lines = data.toString().split(/\n/g);
+  var line = lines[1].split(/\s+/);
+  var total = parseInt(line[1], 10);
+  // var free = parseInt(line[3], 10);
+  // var buffers = parseInt(line[5], 10);
+  // var cached = parseInt(line[6], 10);
+  // var actualFree = free + buffers + cached;
+
+  memory = {
+    total: total,
+    usage: parseInt(line[2], 10)
+    // free: free,
+    // shared: parseInt(line[4], 10),
+    // buffers: buffers,
+    // cached: cached,
+    // actualFree: actualFree,
+    // percentUsed: parseFloat(((1 - (actualFree / total)) * 100).toFixed(2)),
+    // comparePercentUsed: ((1 - (os.freemem() / os.totalmem())) * 100).toFixed(2)
+  };
+});
+
+prc.on('error', function (err) {
+  logger.system().error(__filename, '获取内存错误', err);
+});
 
 /**
  * 硬件信息
@@ -17,7 +50,7 @@ var currData = [];
  */
 exports.information = function (socket) {
   setInterval(function () {
-    var memUsage = memTotal - os.freemem();
+    // var memUsage = memTotal - os.freemem();
 
     var sourceData =  fs.readFileSync('/proc/net/dev').toString();
 
@@ -84,8 +117,8 @@ exports.information = function (socket) {
               amount: osCpu.length
             },
             mem: {
-              usage: memUsage,
-              total: memTotal
+              usage: memory.usage,
+              total: memory.total
             }
           };
 
@@ -95,7 +128,6 @@ exports.information = function (socket) {
     }, function (err, results) {
       if (err) {
         logger[err.type]().error(__filename, '获取硬件信息失败', err);
-        res.status(400).end();
 
         return false;
       }
