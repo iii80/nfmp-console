@@ -1,8 +1,8 @@
 /**
  * Hardware Controller
  */
-angular.module('controllers').controller('hardware', ['$scope', '$state', '$stateParams', '$http', '$interval',
-  function ($scope, $state, $stateParams, $http, $interval) {
+angular.module('controllers').controller('hardware', ['$scope', '$rootscope',
+  function ($scope, $rootscope) {
     'use strict';
 
     /**
@@ -132,7 +132,7 @@ angular.module('controllers').controller('hardware', ['$scope', '$state', '$stat
     /**
      * 读取硬件信息
      */
-    socket.on('hardware', _.throttle(function (res) {
+    $rootscope.socket.on('hardware', _.throttle(function (res) {
       $scope.$apply(function () {
         $scope.cpuUsage = _.floor(res.cpu.usage);
         $scope.cpuAmount = res.cpu.amount;
