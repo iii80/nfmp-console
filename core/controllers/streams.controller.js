@@ -251,9 +251,9 @@ exports.create = function (req, res) {
       var normal = [];
 
       if (stream.inNetwork) {
-        normal = ['-i', '"' + stream.url + '?source=' + stream.inNetwork  + '"'];
+        normal = ['-stimeout', '5000000', '-i', '"' + stream.url + '?source=' + stream.inNetwork  + '"'];
       } else {
-        normal = ['-i', '"' + stream.url + '"'];
+        normal = ['-stimeout', '5000000', '-i', '"' + stream.url + '"'];
       }
 
       var cmd = [];
