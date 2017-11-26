@@ -7,41 +7,8 @@ var _ = require('lodash');
 var spawn = require('child_process').spawn;
 var logger = require('../../lib/logger.lib');
 
-// var memTotal = os.totalmem();
 var oldListData = [];
 var currData = [];
-var memory = {};
-
-/**
- * 获取内存信息
- */
-var prc = spawn('free', []);
-prc.stdout.setEncoding('utf8');
-prc.stdout.on('data', function (data) {
-  var lines = data.toString().split(/\n/g);
-  var line = lines[1].split(/\s+/);
-  var total = parseInt(line[1], 10);
-  // var free = parseInt(line[3], 10);
-  // var buffers = parseInt(line[5], 10);
-  // var cached = parseInt(line[6], 10);
-  // var actualFree = free + buffers + cached;
-
-  memory = {
-    total: total,
-    usage: parseInt(line[2], 10)
-    // free: free,
-    // shared: parseInt(line[4], 10),
-    // buffers: buffers,
-    // cached: cached,
-    // actualFree: actualFree,
-    // percentUsed: parseFloat(((1 - (actualFree / total)) * 100).toFixed(2)),
-    // comparePercentUsed: ((1 - (os.freemem() / os.totalmem())) * 100).toFixed(2)
-  };
-});
-
-prc.on('error', function (err) {
-  logger.system().error(__filename, '获取内存错误', err);
-});
 
 /**
  * 硬件信息
@@ -50,8 +17,9 @@ prc.on('error', function (err) {
  */
 exports.information = function (socket) {
   setInterval(function () {
-    // var memUsage = memTotal - os.freemem();
-
+    /**
+     * 获取网卡信息
+     */
     var sourceData =  fs.readFileSync('/proc/net/dev').toString();
 
     // 按换行符分割数据转数组
@@ -106,23 +74,48 @@ exports.information = function (socket) {
     oldListData = list;
 
     async.parallel({
-      cpuAndMem: function (callback) {
+      cpu: function (callback) {
         osUtils.cpuUsage(function (cpuUsage) {
           var osCpu = os.cpus();
 
-          var information = {
-            cpu: {
-              usage: cpuUsage * 100,
+          var cpu = {
+            usage: cpuUsage * 100,
               model: osCpu[0].model,
               amount: osCpu.length
-            },
-            mem: {
-              usage: memory.usage,
-              total: memory.total
-            }
           };
 
-          callback(null, information);
+          callback(null, cpu);
+        });
+      },
+      mem: function (callback) {
+        var prc = spawn('free', []);
+        prc.stdout.setEncoding('utf8');
+        prc.stdout.on('data', function (data) {
+          var lines = data.toString().split(/\n/g);
+          var line = lines[1].split(/\s+/);
+          var total = parseInt(line[1], 10);
+          // var free = parseInt(line[3], 10);
+          // var buffers = parseInt(line[5], 10);
+          // var cached = parseInt(line[6], 10);
+          // var actualFree = free + buffers + cached;
+
+          var mem = {
+            total: total,
+            usage: parseInt(line[2], 10)
+            // free: free,
+            // shared: parseInt(line[4], 10),
+            // buffers: buffers,
+            // cached: cached,
+            // actualFree: actualFree,
+            // percentUsed: parseFloat(((1 - (actualFree / total)) * 100).toFixed(2)),
+            // comparePercentUsed: ((1 - (os.freemem() / os.totalmem())) * 100).toFixed(2)
+          };
+
+          callback(null, mem);
+        });
+
+        prc.on('error', function (err) {
+          logger.system().error(__filename, '获取内存错误', err);
         });
       }
     }, function (err, results) {
@@ -133,8 +126,8 @@ exports.information = function (socket) {
       }
 
       var output = {
-        cpu: results.cpuAndMem.cpu,
-        mem: results.cpuAndMem.mem,
+        cpu: results.cpu,
+        mem: results.mem,
         network: currData
       };
 
