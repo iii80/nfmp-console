@@ -60,3 +60,7 @@ server.on('listening', function () {
 io.sockets.on('connection', function (socket) {
   hardware.information(socket);
 });
+
+io.sockets.on('disconnect', function () {
+  hardware.disconnect();
+});

@@ -13,6 +13,8 @@ var cpu = {};
 var mem = {};
 var network = [];
 
+var timeout = '';
+
 /**
  * 获取硬件信息
  */
@@ -119,12 +121,11 @@ setInterval(function () {
 
 /**
  * 硬件信息
- * @param {Object} req
- * @param {Object} res
  */
 exports.information = function (socket) {
   console.log(1);
-  setInterval(function () {
+  timeout = setInterval(function () {
+    console.log(1-1)
     var output = {
       cpu: cpu,
       mem: mem,
@@ -132,5 +133,13 @@ exports.information = function (socket) {
     };
 
     socket.emit('hardware', output);
-  }, 50);
+  }, 500);
+};
+
+/**
+ * 断开连接
+ */
+exports.disconnect = function () {
+  console.log(2);
+  clearInterval(timeout);
 };
