@@ -125,6 +125,9 @@ angular.module('console', [
 ]).run(['checkSignIn', '$templateCache', function (checkSignIn) {
   // 检查用户是否登录
   checkSignIn();
+
+  // 连接socket
+  var socket = io.connect('/');
 }]);
 
 /**

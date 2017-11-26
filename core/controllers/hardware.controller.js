@@ -13,7 +13,7 @@ var cpu = {};
 var mem = {};
 var network = [];
 
-var timeout = '';
+var timeout = null;
 
 /**
  * 获取硬件信息
