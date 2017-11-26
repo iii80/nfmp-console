@@ -6,5 +6,5 @@ var path = require('path');
  * @param {Object} res
  */
 module.exports = function (req, res) {
-  res.sendFile('home.html', { root: path.join(__dirname,'./public/assets/') });
+  res.sendFile('home.html', { root: path.join(__dirname,'../../public/assets/') });
 };
