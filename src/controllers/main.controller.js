@@ -1,8 +1,8 @@
 /**
  * Main Controller
  */
-angular.module('controllers').controller('main', ['$scope', '$state', '$rootscope',
-  function ($scope, $state, $rootscope) {
+angular.module('controllers').controller('main', ['$scope', '$state', '$rootScope',
+  function ($scope, $state, $rootScope) {
     'use strict';
 
     if ($state.current.name === 'main') {
@@ -10,6 +10,6 @@ angular.module('controllers').controller('main', ['$scope', '$state', '$rootscop
     }
 
     // 连接socket
-    $rootscope.socket = io.connect('/');
+    $rootScope.socket = io.connect('/');
   }
 ]);
