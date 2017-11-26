@@ -123,9 +123,7 @@ setInterval(function () {
  * 硬件信息
  */
 exports.information = function (socket) {
-  console.log(1);
   timeout = setInterval(function () {
-    console.log(1111);
     var output = {
       cpu: cpu,
       mem: mem,
@@ -140,6 +138,5 @@ exports.information = function (socket) {
  * 断开连接
  */
 exports.disconnect = function () {
-  console.log(2);
   clearInterval(timeout);
 };
