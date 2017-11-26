@@ -125,7 +125,7 @@ setInterval(function () {
 exports.information = function (socket) {
   console.log(1);
   timeout = setInterval(function () {
-    console.log(1-1)
+    console.log(1111);
     var output = {
       cpu: cpu,
       mem: mem,
