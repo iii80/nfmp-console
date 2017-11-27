@@ -508,10 +508,8 @@ exports.update = function (req, res) {
       var newStream = results.loadStreams.oldStream;
 
       if (results.createCMD) {
-        newStream.active = true;
         newStream.cmd = results.createCMD;
       } else {
-        newStream.active = false;
         newStream.cmd = '';
       }
 
