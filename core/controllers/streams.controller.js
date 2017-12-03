@@ -251,9 +251,9 @@ exports.create = function (req, res) {
       var normal = [];
 
       if (stream.inNetwork) {
-        normal = ['-stimeout', '5000000', '-i', '"' + stream.url + '?source=' + stream.inNetwork  + '"'];
+        normal = ['-i', '"' + stream.url + '?source=' + stream.inNetwork  + '"'];
       } else {
-        normal = ['-stimeout', '5000000', '-i', '"' + stream.url + '"'];
+        normal = ['-i', '"' + stream.url + '"'];
       }
 
       var cmd = [];
@@ -485,9 +485,9 @@ exports.update = function (req, res) {
       var normal = [];
 
       if (stream.inNetwork) {
-        normal = ['-stimeout', '5000000', '-i', '"' + stream.url + '?source=' + stream.inNetwork  + '"'];
+        normal = ['-i', '"' + stream.url + '?source=' + stream.inNetwork  + '"'];
       } else {
-        normal = ['-stimeout', '5000000', '-i', '"' + stream.url + '"'];
+        normal = ['-i', '"' + stream.url + '"'];
       }
 
       var cmd = [];
