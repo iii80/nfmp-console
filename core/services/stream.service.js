@@ -102,8 +102,6 @@ exports.runCMD = function (id, cmd, callback) {
 
     server.on('close',function(code){
       console.log('子进程Close：' + code);
-
-      writePid(id, '');
     });
 
     server.on('error',function(code, signal){
