@@ -56,7 +56,7 @@ function writePid (id, pid, callback) {
     result.pid = pid;
 
     streamList.push(result);
-
+console.log(JSON.stringify(streamList));
     fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(streamList), function (err) {
       if (err) {
         err.type = 'system';
