@@ -82,8 +82,7 @@ exports.runCMD = function (id, cmd, callback) {
   function startServer() {
     server = spawn(cmd[0], cmd[1], {
       shell: true,
-      detached: true,
-      stdio: 'ignore'
+      detached: true
     });
 
     writePid(id, server.pid, callback);
@@ -95,6 +94,14 @@ exports.runCMD = function (id, cmd, callback) {
         });
       }, 3000);
     }
+
+    server.stdout.on('data', function (data) {
+      console.log(data.toString());
+    });
+
+    server.stderr.on('data', function (data) {
+      console.log(data.toString());
+    });
 
     server.on('close',function(code){
       console.log('子进程Close：' + code);
