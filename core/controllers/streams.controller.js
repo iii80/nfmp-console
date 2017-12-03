@@ -561,12 +561,12 @@ exports.update = function (req, res) {
         callback();
       });
     }],
-    runCMD: ['createCMD', 'writeData', function (callback, results) {
+    runCMD: ['writeData', function (callback, results) {
       if (!results.createCMD) {
         callback();
         return false;
       }
-
+console.log(1);
       streamService.runCMD(id, results.createCMD);
 
       callback();
