@@ -546,11 +546,14 @@ exports.update = function (req, res) {
 
       newStreamList = _.map(newStreamList, function (item) {
         if (item.id === id) {
+          console.log('yes');
           return newStream;
         } else {
           return item;
         }
       });
+
+      console.log(newStreamList);
 
       fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(newStreamList), function (err) {
         if (err) {
