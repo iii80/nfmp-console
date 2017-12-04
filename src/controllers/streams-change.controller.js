@@ -44,7 +44,7 @@ angular.module('controllers').controller('streamsChange', ['$scope', '$state', '
             $scope.name = data.name;
             $scope.url = data.url;
 
-            if (data.inNetwork) $scope.networkName = data.inNetwork;
+            if (data.inNetwork) $scope.inNetworkName = data.inNetwork;
 
             if (data.hls) $scope.hls = data.hls;
 
