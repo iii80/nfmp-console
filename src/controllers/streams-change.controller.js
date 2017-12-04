@@ -49,7 +49,7 @@ angular.module('controllers').controller('streamsChange', ['$scope', '$state', '
             if (data.hls) $scope.hls = data.hls;
 
             if (data.muhicast) {
-              $scope.muhicast = data.muhicast
+              $scope.muhicast = data.muhicast;
               $scope.networkName = data.network;
               $scope.outUrl = data.outUrl;
             }

@@ -355,6 +355,7 @@ exports.create = function (req, res) {
  * @param {Object} res
  */
 exports.update = function (req, res) {
+  console.log(req.body);
   req.checkBody({
     'name': {
       notEmpty: {
