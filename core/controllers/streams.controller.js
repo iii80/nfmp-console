@@ -547,6 +547,7 @@ exports.update = function (req, res) {
       newStreamList = _.map(newStreamList, function (item) {
         if (item.id === id) {
           console.log('yes');
+          console.log(newStream);
           return newStream;
         } else {
           return item;
