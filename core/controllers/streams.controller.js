@@ -355,7 +355,6 @@ exports.create = function (req, res) {
  * @param {Object} res
  */
 exports.update = function (req, res) {
-  console.log(req.body);
   req.checkBody({
     'name': {
       notEmpty: {
@@ -432,7 +431,6 @@ exports.update = function (req, res) {
   }
 
   if (req.body.muhicast) {
-    console.log('muhicast');
     stream.muhicast = true;
     stream.network = req.body.network;
     stream.outUrl = req.body.outUrl;
@@ -546,13 +544,14 @@ exports.update = function (req, res) {
 
       var newStreamList = results.loadStreams.streamsList;
 
-      _.map(newStreamList, function (item) {
+      newStreamList = _.map(newStreamList, function (item) {
         if (item.id === id) {
-          console.log('ididid');
           item = newStream;
         }
+
+        return item;
       });
-console.log(newStreamList);
+
       fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(newStreamList), function (err) {
         if (err) {
           err.type = 'system';
