@@ -550,7 +550,7 @@ exports.update = function (req, res) {
           item = newStream;
         }
       });
-
+console.log(newStreamList);
       fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(newStreamList), function (err) {
         if (err) {
           err.type = 'system';
