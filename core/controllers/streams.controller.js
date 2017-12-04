@@ -546,10 +546,10 @@ exports.update = function (req, res) {
 
       newStreamList = _.map(newStreamList, function (item) {
         if (item.id === id) {
-          item = newStream;
+          return newStream;
+        } else {
+          return item;
         }
-
-        return item;
       });
 
       console.log(newStreamList);
