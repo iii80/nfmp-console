@@ -552,6 +552,8 @@ exports.update = function (req, res) {
         return item;
       });
 
+      console.log(newStreamList);
+
       fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(newStreamList), function (err) {
         if (err) {
           err.type = 'system';
