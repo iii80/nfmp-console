@@ -432,6 +432,7 @@ exports.update = function (req, res) {
   }
 
   if (req.body.muhicast) {
+    console.log('muhicast');
     stream.muhicast = true;
     stream.network = req.body.network;
     stream.outUrl = req.body.outUrl;
@@ -547,6 +548,7 @@ exports.update = function (req, res) {
 
       _.map(newStreamList, function (item) {
         if (item.id === id) {
+          console.log('ididid');
           item = newStream;
         }
       });
