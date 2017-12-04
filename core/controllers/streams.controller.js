@@ -517,7 +517,9 @@ exports.update = function (req, res) {
       callback(null, cmd);
     }],
     writeData: ['createCMD',  function (callback, results) {
-      var newStream = results.loadStreams.oldStream;
+      var newStream = {
+        id: results.loadStreams.oldStream.id
+      };
 
       if (results.createCMD) {
         newStream.cmd = results.createCMD;
@@ -546,15 +548,11 @@ exports.update = function (req, res) {
 
       newStreamList = _.map(newStreamList, function (item) {
         if (item.id === id) {
-          console.log('yes');
-          console.log(newStream);
-          return newStream;
-        } else {
-          return item;
+          item = newStream;
         }
-      });
 
-      console.log(newStreamList);
+        return item;
+      });
 
       fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(newStreamList), function (err) {
         if (err) {
