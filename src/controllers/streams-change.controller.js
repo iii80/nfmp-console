@@ -19,7 +19,6 @@ angular.module('controllers').controller('streamsChange', ['$scope', '$state', '
     $scope.network = {};
     $scope.networkName = '';
     $scope.inNetworkName = '';
-    window.$scope = $scope;
 
     /**
      * 读取网卡信息
