@@ -13,10 +13,11 @@ angular.module('controllers').controller('streamsChange', ['$scope', '$state', '
     $scope.id = $stateParams.id;
     $scope.name = '';
     $scope.url = '';
-    $scope.outUrl = 'udp://';
+    $scope.outUrl = '';
     $scope.hls = false;
     $scope.muhicast = false;
     $scope.network = {};
+    $scope.network2 = {};
     $scope.networkName = '';
     $scope.inNetworkName = '';
 
@@ -28,6 +29,7 @@ angular.module('controllers').controller('streamsChange', ['$scope', '$state', '
         var data = res.data;
 
         $scope.network = data;
+        $scope.network2 = data;
       });
 
     /**

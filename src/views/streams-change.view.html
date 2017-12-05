@@ -47,7 +47,7 @@
             <div ng-if="muhicast" ng-class="{ 'has-error': streamForm.network.$touched && streamForm.network.$invalid }" class="form-group">
                 <label for="network" class="col-sm-2 control-label">* 组播输出网卡：</label>
                 <div class="col-sm-10">
-                    <select ng-model="$parent.networkName" ng-options="item.name as item.name for item in network" ng-disabled="$parent.transmitting" id="network" class="form-control" required>
+                    <select ng-model="$parent.networkName" ng-options="item.name as item.name for item in network2" ng-disabled="$parent.transmitting" id="network" class="form-control" required>
                         <option value="">请选择输出网卡</option>
                     </select>
                 </div>
@@ -55,7 +55,7 @@
             <div ng-if="muhicast" ng-class="{ 'has-error': streamForm.outUrl.$touched && streamForm.outUrl.$invalid }" class="form-group">
                 <label for="outUrl" class="col-sm-2 control-label">* 组播输出地址：</label>
                 <div class="col-sm-10">
-                    <input ng-model="$parent.outUrl" ng-pattern="/^udp:\/\//" ng-disabled="transmitting" class="form-control" id="outUrl" type="text" name="outUrl" placeholder="请输入组播输出地址" required>
+                    <input ng-model="$parent.outUrl" ng-pattern="/^udp:\/\//." ng-disabled="transmitting" class="form-control" id="outUrl" type="text" name="outUrl" placeholder="请输入组播输出地址" required>
                     <p ng-show="streamForm.outUrl.$touched && streamForm.outUrl.$invalid" class="help-block">输出组播地址必须以 udp:// 开头</p>
                 </div>
             </div>
