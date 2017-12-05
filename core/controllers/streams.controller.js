@@ -458,21 +458,30 @@ exports.update = function (req, res) {
         });
       });
     },
-    moveDir: ['loadStreams', function (callback, results) {
+    checkDir: ['loadStreams', function (callback, results) {
       if (results.loadStreams.oldStream.name === stream.name) {
         callback();
         return false;
       }
 
-      exec('mv ' + path.join(__dirname, '../../public/assets/streams/' + results.loadStreams.oldStream.name) + ' ' + path.join(__dirname, '../../public/assets/streams/' + stream.name), function (err) {
+      rimraf(path.join(__dirname, '../../public/assets/streams/' + results.loadStreams.oldStream.name), function (err) {
         if (err) {
           err.type = 'system';
-          err.message = 'MV文件夹失败';
+          err.message = 'RM文件夹失败';
           callback(err);
           return false;
         }
 
-        callback();
+        mkdirp(path.join(__dirname, '../../public/assets/streams/' + stream.name), function (err) {
+          if (err) {
+            err.type = 'system';
+            err.message = 'MK文件夹失败';
+            callback(err);
+            return false;
+          }
+
+          callback();
+        });
       });
     }],
     getNetwork: function (callback) {
@@ -487,7 +496,7 @@ exports.update = function (req, res) {
         callback(err, result);
       });
     },
-    createCMD: ['moveDir', 'getNetwork', function (callback, results) {
+    createCMD: ['checkDir', 'getNetwork', function (callback, results) {
       var normal = [];
 
       // if (stream.inNetwork) {
