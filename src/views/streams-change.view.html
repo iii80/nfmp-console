@@ -27,7 +27,7 @@
             <div ng-class="{ 'has-error': streamForm.inNetwork.$touched && streamForm.inNetwork.$invalid }" class="form-group">
                 <label for="inNetwork" class="col-sm-2 control-label">输入网卡：{{inNetworkName}}lala</label>
                 <div class="col-sm-10">
-                    <select ng-model="inNetworkName" ng-options="item.name for item in network" ng-disabled="$parent.transmitting" id="inNetwork" class="form-control">
+                    <select ng-model="inNetworkName" ng-options="item.name as item.name for item in network" ng-disabled="$parent.transmitting" id="inNetwork" class="form-control">
                         <option value="">请选择输入网卡</option>
                     </select>
                 </div>
@@ -47,7 +47,7 @@
             <div ng-if="muhicast" ng-class="{ 'has-error': streamForm.network.$touched && streamForm.network.$invalid }" class="form-group">
                 <label for="network" class="col-sm-2 control-label">* 组播输出网卡：</label>
                 <div class="col-sm-10">
-                    <select ng-model="$parent.$parent.networkName" ng-options="item.name as item.name for item in network" ng-disabled="$parent.transmitting" id="network" class="form-control" required>
+                    <select ng-model="$parent.networkName" ng-options="item.name as item.name for item in network" ng-disabled="$parent.transmitting" id="network" class="form-control" required>
                         <option value="">请选择输出网卡</option>
                     </select>
                 </div>
