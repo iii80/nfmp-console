@@ -27,7 +27,7 @@
             <div ng-class="{ 'has-error': streamForm.inNetwork.$touched && streamForm.inNetwork.$invalid }" class="form-group">
                 <label for="inNetwork" class="col-sm-2 control-label">输入网卡：{{inNetworkName}}lala</label>
                 <div class="col-sm-10">
-                    <select ng-model="$parent.inNetworkName" ng-options="item.name as item.name for item in network" ng-disabled="$parent.transmitting" id="inNetwork" class="form-control">
+                    <select ng-model="inNetworkName" ng-options="item.name for item in network" ng-disabled="$parent.transmitting" id="inNetwork" class="form-control">
                         <option value="">请选择输入网卡</option>
                     </select>
                 </div>
