@@ -23,7 +23,7 @@ app.set('port', port);
 /**
  * 创建 HTTP 服务器
  */
-fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
+fs.readFile(path.join(__dirname,'../config/streams.json'), function (err, data) {
   if (err && data) {
     logger.system().error(__filename, '获取 Stream 失败', err);
     return false;
