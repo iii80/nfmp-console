@@ -39,47 +39,47 @@ fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, dat
 
   var server = http.createServer(app);
   var io = require('socket.io').listen(server);
-});
 
-/**
- * 监听端口
- */
-server.listen(port);
+  /**
+   * 监听端口
+   */
+  server.listen(port);
 
-server.on('error', function (error) {
-  if (error.syscall !== 'listen') throw error;
+  server.on('error', function (error) {
+    if (error.syscall !== 'listen') throw error;
 
-  var bind = typeof port === 'string' ? 'pipe ' + port : 'port ' + port;
+    var bind = typeof port === 'string' ? 'pipe ' + port : 'port ' + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      logger.system().error(bind + ' 需要有更高的权限');
-      process.exit(1);
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+      case 'EACCES':
+        logger.system().error(bind + ' 需要有更高的权限');
+        process.exit(1);
 
-      break;
-    case 'EADDRINUSE':
-      logger.system().error(bind + ' 已被使用');
-      process.exit(1);
+        break;
+      case 'EADDRINUSE':
+        logger.system().error(bind + ' 已被使用');
+        process.exit(1);
 
-      break;
-    default:
-      throw error;
-  }
-});
+        break;
+      default:
+        throw error;
+    }
+  });
 
-server.on('listening', function () {
-  var addr = server.address();
+  server.on('listening', function () {
+    var addr = server.address();
 
-  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+    var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
 
-  logger.system().info('正在监听 ' + bind);
-});
+    logger.system().info('正在监听 ' + bind);
+  });
 
-io.sockets.on('connection', function (socket) {
-  hardware.information(socket);
+  io.sockets.on('connection', function (socket) {
+    hardware.information(socket);
 
-  socket.on('disconnect', function () {
-    hardware.disconnect();
+    socket.on('disconnect', function () {
+      hardware.disconnect();
+    });
   });
 });
