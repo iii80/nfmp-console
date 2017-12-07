@@ -50,23 +50,73 @@ exports.change = function (req, res) {
       return res.status(400).end();
     }
 
+    var cmd;
+
     if (req.body.toggle === true) {
-      exec('ifconfig ' + req.params.network + ' up', function (err, stdout, stderr) {
+      cmd = 'ifconfig ' + req.params.network + ' up';
+
+      exec(cmd, function (err, stdout, stderr) {
         if (err) {
           logger.system().error(__filename, '启动网卡' + req.params.network + '失败', err);
           return res.status(400).end();
         }
 
-        res.status(204).end();
+        fs.readFile('/etc/rc.d/rc.local', function (err, data) {
+          if (err && data) {
+            logger.system().error(__filename, '获取 Stream 失败', err);
+            return res.status(400).end();
+          }
+
+          var lines = data.toString().split(/\n/g);
+
+          _.forEach(lines, function (item) {
+            if (item !== cmd) {
+              item = cmd;
+            }
+          });
+
+          fs.writeFile('/etc/rc.d/rc.local', lines.join('\n'), function (err) {
+            if (err) {
+              logger.system().error(__filename, '写入 Stream 失败', err);
+              return res.status(400).end();
+            }
+
+            res.status(204).end();
+          });
+        });
       });
     } else {
+      cmd = 'ifconfig ' + req.params.network + ' down';
+
       exec('ifconfig ' + req.params.network + ' down', function (err, stdout, stderr) {
         if (err) {
           logger.system().error(__filename, '禁止网卡' + req.params.network + '失败', err);
           return res.status(400).end();
         }
 
-        res.status(204).end();
+        fs.readFile('/etc/rc.d/rc.local', function (err, data) {
+          if (err && data) {
+            logger.system().error(__filename, '获取 Stream 失败', err);
+            return res.status(400).end();
+          }
+
+          var lines = data.toString().split(/\n/g);
+
+          _.forEach(lines, function (item) {
+            if (item !== cmd) {
+              item = cmd;
+            }
+          });
+
+          fs.writeFile('/etc/rc.d/rc.local', lines.join('\n'), function (err) {
+            if (err) {
+              logger.system().error(__filename, '写入 Stream 失败', err);
+              return res.status(400).end();
+            }
+
+            res.status(204).end();
+          });
+        });
       });
     }
   } else {
@@ -112,7 +162,28 @@ exports.change = function (req, res) {
         return res.status(400).end();
       }
 
-      res.status(204).end();
+      fs.readFile('/etc/rc.d/rc.local', function (err, data) {
+        if (err && data) {
+          logger.system().error(__filename, '获取 Stream 失败', err);
+          return res.status(400).end();
+        }
+
+        var lines = data.toString().split(/\n/g);
+
+        _.forEach(lines, function (item) {
+          var reg = new RegExp('^ifconfig ' + req.params.network + '.+');
+          if (reg.test(item)) item = cmd;
+        });
+
+        fs.writeFile('/etc/rc.d/rc.local', lines.join('\n'), function (err) {
+          if (err) {
+            logger.system().error(__filename, '写入 Stream 失败', err);
+            return res.status(400).end();
+          }
+
+          res.status(204).end();
+        });
+      });
     });
   }
 };
