@@ -68,15 +68,25 @@ exports.change = function (req, res) {
             return res.status(400).end();
           }
 
-          var lines = data.split(/\n/g);
+          var outData;
 
-          _.forEach(lines, function (item) {
-            if (item !== cmd) {
-              item = cmd;
-            }
-          });
+          if (data === '') {
+            res.status(204).end();
 
-          fs.writeFile('/etc/rc.d/rc.local', lines.join('\n'), function (err) {
+            outData = cmd;
+          }  else {
+            var lines = data.toString().split(/\n/g);
+
+            _.forEach(lines, function (item) {
+              if (item !== cmd) {
+                item = cmd;
+              }
+            });
+
+            outData = lines.join('\n');
+          }
+
+          fs.writeFile('/etc/rc.d/rc.local', loutData, function (err) {
             if (err) {
               logger.system().error(__filename, '写入 Stream 失败', err);
               return res.status(400).end();
@@ -101,15 +111,25 @@ exports.change = function (req, res) {
             return res.status(400).end();
           }
 
-          var lines = data.split(/\n/g);
+          var outData;
 
-          _.forEach(lines, function (item) {
-            if (item !== cmd) {
-              item = cmd;
-            }
-          });
+          if (data === '') {
+            res.status(204).end();
 
-          fs.writeFile('/etc/rc.d/rc.local', lines.join('\n'), function (err) {
+            outData = cmd;
+          }  else {
+            var lines = data.toString().split(/\n/g);
+
+            _.forEach(lines, function (item) {
+              if (item !== cmd) {
+                item = cmd;
+              }
+            });
+
+            outData = lines.join('\n');
+          }
+
+          fs.writeFile('/etc/rc.d/rc.local', outData, function (err) {
             if (err) {
               logger.system().error(__filename, '写入 Stream 失败', err);
               return res.status(400).end();
@@ -169,14 +189,24 @@ exports.change = function (req, res) {
           return res.status(400).end();
         }
 
-        var lines = data.split(/\n/g);
+        var outData;
 
-        _.forEach(lines, function (item) {
-          var reg = new RegExp('^ifconfig ' + req.params.network + '.+');
-          if (reg.test(item)) item = cmd;
-        });
+        if (data === '') {
+          res.status(204).end();
 
-        fs.writeFile('/etc/rc.d/rc.local', lines.join('\n'), function (err) {
+          outData = cmd;
+        }  else {
+          var lines = data.toString().split(/\n/g);
+
+          _.forEach(lines, function (item) {
+            var reg = new RegExp('^ifconfig ' + req.params.network + '.+');
+            if (reg.test(item)) item = cmd;
+          });
+
+          outData = lines.join('\n');
+        }
+
+        fs.writeFile('/etc/rc.d/rc.local', outData, function (err) {
           if (err) {
             logger.system().error(__filename, '写入 Stream 失败', err);
             return res.status(400).end();
