@@ -72,7 +72,7 @@ exports.change = function (req, res) {
           var newLine;
 
           _.forEach(lines, function (item) {
-            if (item !== cmd) {
+            if (item === 'ifconfig ' + req.params.network + ' down') {
               item = cmd;
             } else if (index === lines.length - 1) {
               newLine = cmd;
@@ -113,7 +113,7 @@ exports.change = function (req, res) {
           var newLine;
 
           _.forEach(lines, function (item) {
-            if (item !== cmd) {
+            if (item === 'ifconfig ' + req.params.network + ' up') {
               item = cmd;
             } else if (index === lines.length - 1) {
               newLine = cmd;
