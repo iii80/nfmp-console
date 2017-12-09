@@ -70,7 +70,7 @@ exports.change = function (req, res) {
 
           var outData;
 
-          if (data === '') {
+          if (!data) {
             res.status(204).end();
 
             outData = cmd;
@@ -113,7 +113,7 @@ exports.change = function (req, res) {
 
           var outData;
 
-          if (data === '') {
+          if (!data) {
             res.status(204).end();
 
             outData = cmd;
@@ -190,8 +190,8 @@ exports.change = function (req, res) {
         }
 
         var outData;
-console.log(data);
-        if (data === '') {
+
+        if (!data) {
           res.status(204).end();
 
           outData = cmd;
