@@ -62,31 +62,24 @@ exports.change = function (req, res) {
           return res.status(400).end();
         }
 
-        fs.readFile('/etc/rc.d/rc.local', function (err, data) {
+        fs.readFile('/etc/rc.local', function (err, data) {
           if (err && data) {
             logger.system().error(__filename, '获取 Stream 失败', err);
             return res.status(400).end();
           }
 
-          var outData;
+          var lines = data.toString().split(/\n/g);
 
-          if (!data) {
-            res.status(204).end();
+          _.forEach(lines, function (item, index) {
+            if (item !== cmd) {
+              item = cmd;
+            }
+          });
 
-            outData = cmd;
-          }  else {
-            var lines = data.toString().split(/\n/g);
+          _.pull(lines, 'exit 0');
+          lines.push('exit 0');
 
-            _.forEach(lines, function (item) {
-              if (item !== cmd) {
-                item = cmd;
-              }
-            });
-
-            outData = lines.join('\n');
-          }
-
-          fs.writeFile('/etc/rc.d/rc.local', loutData, function (err) {
+          fs.writeFile('/etc/rc.local', lines.join('\n'), function (err) {
             if (err) {
               logger.system().error(__filename, '写入 Stream 失败', err);
               return res.status(400).end();
@@ -99,37 +92,30 @@ exports.change = function (req, res) {
     } else {
       cmd = 'ifconfig ' + req.params.network + ' down';
 
-      exec(cmd, function (err, stdout, stderr) {
+      exec('ifconfig ' + req.params.network + ' down', function (err, stdout, stderr) {
         if (err) {
           logger.system().error(__filename, '禁止网卡' + req.params.network + '失败', err);
           return res.status(400).end();
         }
 
-        fs.readFile('/etc/rc.d/rc.local', function (err, data) {
+        fs.readFile('/etc/rc.local', function (err, data) {
           if (err && data) {
             logger.system().error(__filename, '获取 Stream 失败', err);
             return res.status(400).end();
           }
 
-          var outData;
+          var lines = data.toString().split(/\n/g);
 
-          if (!data) {
-            res.status(204).end();
+          _.forEach(lines, function (item) {
+            if (item !== cmd) {
+              item = cmd;
+            }
+          });
 
-            outData = cmd;
-          }  else {
-            var lines = data.toString().split(/\n/g);
+          _.pull(lines, 'exit 0');
+          lines.push('exit 0');
 
-            _.forEach(lines, function (item) {
-              if (item !== cmd) {
-                item = cmd;
-              }
-            });
-
-            outData = lines.join('\n');
-          }
-
-          fs.writeFile('/etc/rc.d/rc.local', outData, function (err) {
+          fs.writeFile('/etc/rc.local', lines.join('\n'), function (err) {
             if (err) {
               logger.system().error(__filename, '写入 Stream 失败', err);
               return res.status(400).end();
@@ -183,30 +169,23 @@ exports.change = function (req, res) {
         return res.status(400).end();
       }
 
-      fs.readFile('/etc/rc.d/rc.local', function (err, data) {
+      fs.readFile('/etc/rc.local', function (err, data) {
         if (err && data) {
           logger.system().error(__filename, '获取 Stream 失败', err);
           return res.status(400).end();
         }
 
-        var outData;
+        var lines = data.toString().split(/\n/g);
 
-        if (!data) {
-          res.status(204).end();
+        _.forEach(lines, function (item) {
+          var reg = new RegExp('^ifconfig ' + req.params.network + '.+');
+          if (reg.test(item)) item = cmd;
+        });
 
-          outData = cmd;
-        }  else {
-          var lines = data.toString().split(/\n/g);
+        _.pull(lines, 'exit 0');
+        lines.push('exit 0');
 
-          _.forEach(lines, function (item) {
-            var reg = new RegExp('^ifconfig ' + req.params.network + '.+');
-            if (reg.test(item)) item = cmd;
-          });
-
-          outData = lines.join('\n');
-        }
-
-        fs.writeFile('/etc/rc.d/rc.local', outData, function (err) {
+        fs.writeFile('/etc/rc.local', lines.join('\n'), function (err) {
           if (err) {
             logger.system().error(__filename, '写入 Stream 失败', err);
             return res.status(400).end();
