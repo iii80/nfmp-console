@@ -190,7 +190,7 @@ exports.change = function (req, res) {
         }
 
         var outData;
-
+console.log(data);
         if (data === '') {
           res.status(204).end();
 
