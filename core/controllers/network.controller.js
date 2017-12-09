@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var logger = require('../../lib/logger.lib');
 var exec = require('child_process').exec;
+var fs = require('fs');
 var network = require('../services/network.service');
 
 /**
@@ -88,7 +89,7 @@ exports.change = function (req, res) {
     } else {
       cmd = 'ifconfig ' + req.params.network + ' down';
 
-      exec('ifconfig ' + req.params.network + ' down', function (err, stdout, stderr) {
+      exec(cmd, function (err, stdout, stderr) {
         if (err) {
           logger.system().error(__filename, '禁止网卡' + req.params.network + '失败', err);
           return res.status(400).end();
