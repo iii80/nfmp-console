@@ -69,12 +69,17 @@ exports.change = function (req, res) {
           }
 
           var lines = data.toString().split(/\n/g);
+          var newLine;
 
-          _.forEach(lines, function (item, index) {
+          _.forEach(lines, function (item) {
             if (item !== cmd) {
               item = cmd;
+            } else if (index === lines.length - 1) {
+              newLine = cmd;
             }
           });
+
+          if (newLine) lines.push(newLine);
 
           _.pull(lines, 'exit 0');
           lines.push('exit 0');
@@ -105,12 +110,17 @@ exports.change = function (req, res) {
           }
 
           var lines = data.toString().split(/\n/g);
+          var newLine;
 
           _.forEach(lines, function (item) {
             if (item !== cmd) {
               item = cmd;
+            } else if (index === lines.length - 1) {
+              newLine = cmd;
             }
           });
+
+          if (newLine) lines.push(newLine);
 
           _.pull(lines, 'exit 0');
           lines.push('exit 0');
@@ -176,11 +186,18 @@ exports.change = function (req, res) {
         }
 
         var lines = data.toString().split(/\n/g);
+        var newLine = '';
 
-        _.forEach(lines, function (item) {
+        _.forEach(lines, function (item, index) {
           var reg = new RegExp('^ifconfig ' + req.params.network + '.+');
-          if (reg.test(item)) item = cmd;
+          if (reg.test(item)) {
+            item = cmd;
+          } else if (index === lines.length - 1) {
+            newLine = cmd;
+          }
         });
+
+        if (newLine) lines.push(newLine);
 
         _.pull(lines, 'exit 0');
         lines.push('exit 0');
