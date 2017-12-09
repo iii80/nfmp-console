@@ -68,7 +68,7 @@ exports.change = function (req, res) {
             return res.status(400).end();
           }
 
-          var lines = data.toString().split(/\n/g);
+          var lines = data.split(/\n/g);
 
           _.forEach(lines, function (item) {
             if (item !== cmd) {
@@ -101,7 +101,7 @@ exports.change = function (req, res) {
             return res.status(400).end();
           }
 
-          var lines = data.toString().split(/\n/g);
+          var lines = data.split(/\n/g);
 
           _.forEach(lines, function (item) {
             if (item !== cmd) {
@@ -169,7 +169,7 @@ exports.change = function (req, res) {
           return res.status(400).end();
         }
 
-        var lines = data.toString().split(/\n/g);
+        var lines = data.split(/\n/g);
 
         _.forEach(lines, function (item) {
           var reg = new RegExp('^ifconfig ' + req.params.network + '.+');
