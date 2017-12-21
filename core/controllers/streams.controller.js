@@ -257,9 +257,9 @@ exports.create = function (req, res) {
       // }
 
       if (stream.inNetwork) {
-        normal = ['-i', stream.url + '?source=' + stream.inNetwork];
+        normal = ['-i', stream.url + '?source=' + stream.inNetwork, '-timeout', '-1'];
       } else {
-        normal = ['-i', stream.url];
+        normal = ['-i', stream.url, '-timeout', '-1'];
       }
 
       var cmd = [];
@@ -506,9 +506,9 @@ exports.update = function (req, res) {
       // }
 
       if (stream.inNetwork) {
-        normal = ['-i', stream.url + '?source=' + stream.inNetwork];
+        normal = ['-i', stream.url + '?source=' + stream.inNetwork, '-timeout', '-1'];
       } else {
-        normal = ['-i', stream.url];
+        normal = ['-i', stream.url, '-timeout', '-1'];
       }
 
       var cmd = [];
