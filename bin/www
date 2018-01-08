@@ -96,7 +96,7 @@ fs.readFile(path.join(__dirname,'../config/streams.json'), function (err, data) 
 
       _.forEach(streamList, function (item) {
         if (item.pid) {
-          exec('kill -s 9 ' + item.id);
+          exec('kill -s 9 ' + item.pid);
         }
       });
 
