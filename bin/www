@@ -84,6 +84,6 @@ fs.readFile(path.join(__dirname,'../config/streams.json'), function (err, data) 
   });
 });
 
-process.on('exit', function () { //SIGINT这个信号是系统默认信号，代表信号中断，就是ctrl+c
+process.on('SIGTERM', function () { //SIGINT这个信号是系统默认信号，代表信号中断，就是ctrl+c
   console.log('Got SIGINT.  Press Control-D to exit.');
 });
