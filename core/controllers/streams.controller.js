@@ -62,7 +62,7 @@ exports.list = function (req, res) {
       return res.status(400).end();
     }
 
-    if (!data) {
+    if (!data || data == '') {
       return res.status(200).json([]);
     }
 
