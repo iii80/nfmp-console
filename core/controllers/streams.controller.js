@@ -451,7 +451,7 @@ exports.update = function (req, res) {
         
         var oldStream = _.find(streamsList, { id: id });
 
-        if (oldStream.pid) exec('kill -s 9' + oldStream.pid);
+        if (oldStream.pid) exec('kill -s 9 ' + oldStream.pid);
 
         callback(null, {
           streamsList: streamsList,
