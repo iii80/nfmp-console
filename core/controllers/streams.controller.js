@@ -1,4 +1,3 @@
-var fs = require('fs');
 var mkdirp = require('mkdirp');
 var rimraf = require('rimraf');
 var path = require('path');
@@ -6,6 +5,7 @@ var _ = require('lodash');
 var async = require('async');
 var exec = require('child_process').exec;
 var logger = require('../../lib/logger.lib');
+var localStorage = require('../../lib/localStorage.lib');
 var networkService = require('../services/network.service');
 var streamService = require('../services/stream.service');
 var switchStates = false;
@@ -33,21 +33,16 @@ exports.one = function (req, res) {
 
   var id = req.params.id;
 
-  fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
-    if (err && data) {
-      logger.system().error(__filename, '获取 Stream 失败', err);
-      return res.status(400).end();
-    }
+  var streams = localStorage.getItem('streams');
 
-    if (!data) {
-      return res.status(200).json([]);
-    }
+  if (!streams) {
+    return res.status(200).json([]);
+  }
 
-    var stream = JSON.parse(data);
-    var item = _.find(stream, { id: id });
+  var stream = JSON.parse(data);
+  var item = _.find(stream, { id: id });
 
-    res.status(200).json(item);
-  });
+  res.status(200).json(item);
 };
 
 /**
@@ -56,20 +51,15 @@ exports.one = function (req, res) {
  * @param {Object} res
  */
 exports.list = function (req, res) {
-  fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
-    if (err && data) {
-      logger.system().error(__filename, '获取 Stream 失败', err);
-      return res.status(400).end();
-    }
+  var streams = localStorage.getItem('streams');
 
-    if (!data || data == '') {
-      return res.status(200).json([]);
-    }
+  if (!streams) {
+    return res.status(200).json([]);
+  }
 
-    var streamList = _.sortBy(JSON.parse(data), 'id');
+  var streamList = _.sortBy(JSON.parse(data), 'id');
 
-    res.status(200).json(streamList);
-  });
+  res.status(200).json(streamList);
 };
 
 /**
@@ -102,43 +92,33 @@ exports.switch = function (req, res) {
     return res.status(400).end();
   }
 
-  fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
-    if (err && data) {
-      logger.system().error(__filename, '获取 Stream 失败', err);
-      res.status(400).end();
-      return false;
-    }
+  var streams = localStorage.getItem('streams');
 
-    var streamList = JSON.parse(data);
+  if (!streams) streams = [];
 
-    var result = _.find(streamList, { id: req.body.id });
+  var streamList = JSON.parse(data);
 
-    _.pull(streamList, result);
+  var result = _.find(streamList, { id: req.body.id });
 
-    var _pid = result.pid;
+  _.pull(streamList, result);
 
-    if (!req.body.active) {
-      result.pid = '';
-    }
+  var _pid = result.pid;
 
-    streamList.push(result);
+  if (!req.body.active) {
+    result.pid = '';
+  }
 
-    fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(streamList), function (err) {
-      if (err) {
-        logger.system().error(__filename, '写入 Stream 失败', err);
-        res.status(400).end();
-        return false;
-      }
+  streamList.push(result);
 
-      if (req.body.active) {
-        streamService.runCMD(result.id, result.cmd);
-      } else {
-        exec('kill -s 9 ' + _pid);
-      }
+  localStorage.setItem('streams', JSON.stringify(streamList));
 
-      res.status(204).end();
-    });
-  });
+  if (req.body.active) {
+    streamService.runCMD(result.id, result.cmd);
+  } else {
+    exec('kill -s 9 ' + _pid);
+  }
+
+  res.status(204).end();
 };
 
 /**
@@ -278,56 +258,42 @@ exports.create = function (req, res) {
       callback(null, cmd);
     }],
     writeData: ['createCMD',  function (callback, results) {
-      fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
-        if (err && data) {
-          err.type = 'system';
-          err.message = '获取 Stream 失败';
-          callback(err);
-          return false;
+      var streams = localStorage.getItem('streams');
+
+      var streamList;
+
+      if (!streams || JSON.parse(streams).length === 0) {
+        streamList = [];
+
+        stream.id = '001';
+      } else {
+        streamList = JSON.parse(streams);
+
+        var id = (Number(_.sortBy(streamList, 'id')[streamList.length - 1].id) + 1) + '';
+
+        switch (id.length) {
+          case 1:
+            id = '00' + id;
+
+            break;
+          case 2:
+            id = '0' + id;
         }
 
-        var streamList;
+        stream.id = id;
+      }
 
-        if (!data || JSON.parse(data).length === 0) {
-          streamList = [];
+      if (results.createCMD) {
+        stream.cmd = results.createCMD;
+      } else {
+        stream.cmd = '';
+      }
 
-          stream.id = '001';
-        } else {
-          streamList = JSON.parse(data);
+      streamList.push(stream);
 
-          var id = (Number(_.sortBy(streamList, 'id')[streamList.length - 1].id) + 1) + '';
+      localStorage.setItem('streams', JSON.stringify(streamList));
 
-          switch (id.length) {
-            case 1:
-              id = '00' + id;
-
-              break;
-            case 2:
-              id = '0' + id;
-          }
-
-          stream.id = id;
-        }
-
-        if (results.createCMD) {
-          stream.cmd = results.createCMD;
-        } else {
-          stream.cmd = '';
-        }
-
-        streamList.push(stream);
-
-        fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(streamList), function (err) {
-          if (err) {
-            err.type = 'system';
-            err.message = '写入 Stream 失败';
-            callback(err);
-            return false;
-          }
-
-          callback(null, stream.id);
-        });
-      });
+      callback(null, stream.id);
     }],
     runCMD: ['createCMD', 'writeData', function (callback, results) {
       if (!results.createCMD) {
@@ -439,24 +405,19 @@ exports.update = function (req, res) {
 
   async.auto({
     loadStreams: function (callback) {
-      fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
-        if (err && data) {
-          err.type = 'system';
-          err.message = '获取 Stream 失败';
-          callback(err);
-          return false;
-        }
+      var streams = localStorage.getItem('streams');
 
-        var streamsList = JSON.parse(data);
-        
-        var oldStream = _.find(streamsList, { id: id });
+      if (!streams) streams = [];
 
-        if (oldStream.pid) exec('kill -s 9 ' + oldStream.pid);
+      var streamsList = JSON.parse(data);
 
-        callback(null, {
-          streamsList: streamsList,
-          oldStream: oldStream
-        });
+      var oldStream = _.find(streamsList, { id: id });
+
+      if (oldStream.pid) exec('kill -s 9 ' + oldStream.pid);
+
+      callback(null, {
+        streamsList: streamsList,
+        oldStream: oldStream
       });
     },
     checkDir: ['loadStreams', function (callback, results) {
@@ -564,16 +525,9 @@ exports.update = function (req, res) {
         return item;
       });
 
-      fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(newStreamList), function (err) {
-        if (err) {
-          err.type = 'system';
-          err.message = '写入 Stream 失败';
-          callback(err);
-          return false;
-        }
+      localStorage.setItem('streams', JSON.stringify(newStreamList));
 
-        callback();
-      });
+      callback();
     }],
     runCMD: ['writeData', function (callback, results) {
       if (!results.createCMD) {
@@ -616,33 +570,25 @@ exports.remove = function (req, res) {
     return res.status(400).end();
   }
 
-  fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
+  var streams = localStorage.getItem('streams');
+
+  if (!streams) streams = [];
+
+  var streamList = JSON.parse(data);
+  var oldStream = _.find(streamList, { id: req.params.id });
+  var oldPid = _.get(oldStream, 'pid');
+  var newStreamList = _.reject(streamList, { id: req.params.id });
+
+  if (oldPid) exec('kill -s 9 ' + oldPid);
+
+  rimraf(path.join(__dirname, '../../public/assets/streams/' + oldStream.name), function (err) {
     if (err) {
       logger.system().error(__filename, '获取 Stream 失败', err);
       return res.status(400).end();
     }
 
-    var streamList = JSON.parse(data);
-    var oldStream = _.find(streamList, { id: req.params.id });
-    var oldPid = _.get(oldStream, 'pid');
-    var newStreamList = _.reject(streamList, { id: req.params.id });
+    localStorage.setItem('streams', JSON.stringify(newStreamList));
 
-    if (oldPid) exec('kill -s 9 ' + oldPid);
-
-    rimraf(path.join(__dirname, '../../public/assets/streams/' + oldStream.name), function (err) {
-      if (err) {
-        logger.system().error(__filename, '获取 Stream 失败', err);
-        return res.status(400).end();
-      }
-
-      fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(newStreamList), function (err) {
-        if (err) {
-          logger.system().error(__filename, '写入 Stream 失败', err);
-          return res.status(400).end();
-        }
-
-        res.status(204).end();
-      });
-    });
+    res.status(204).end();
   });
 };

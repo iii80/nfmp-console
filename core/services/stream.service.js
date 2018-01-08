@@ -1,8 +1,8 @@
-var fs = require('fs');
 var path = require('path');
 var _ = require('lodash');
 var spawn = require('child_process').spawn;
 var server = null;
+var localStorage = require('../../lib/localStorage.lib');
 
 /**
  * 检查 Stream 是否激活
@@ -12,22 +12,17 @@ var server = null;
 function checkActive(id, callback) {
   callback = callback || function () {};
 
-  fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
-    if (err && data) {
-      err.type = 'system';
-      err.message = '获取 Stream 失败';
-      callback(err);
-      return false;
-    }
+  var streams = localStorage.getItem('streams');
 
-    var streamList = JSON.parse(data);
+  if (!streams) streams = [];
 
-    var result = _.find(streamList, { id: id });
+  var streamList = JSON.parse(data);
 
-    var active = result.pid ? true : false;
+  var result = _.find(streamList, { id: id });
 
-    callback(active);
-  });
+  var active = result.pid ? true : false;
+
+  callback(active);
 }
 
 /**
@@ -39,35 +34,23 @@ function checkActive(id, callback) {
 function writePid (id, pid, callback) {
   callback = callback || function () {};
 
-  fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
-    if (err && data) {
-      err.type = 'system';
-      err.message = '获取 Stream 失败';
-      callback(err);
-      return false;
-    }
+  var streams = localStorage.getItem('streams');
 
-    var streamList = JSON.parse(data);
+  if (!streams) streams = [];
 
-    var result = _.find(streamList, { id: id });
+  var streamList = JSON.parse(data);
 
-    _.pull(streamList, result);
+  var result = _.find(streamList, { id: id });
 
-    result.pid = pid;
+  _.pull(streamList, result);
 
-    streamList.push(result);
+  result.pid = pid;
 
-    fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(streamList), function (err) {
-      if (err) {
-        err.type = 'system';
-        err.message = '写入 Stream 失败';
-        callback(err);
-        return false;
-      }
+  streamList.push(result);
 
-      callback();
-    });
-  });
+  localStorage.setItem('streams', JSON.stringify(streamList));
+
+  callback();
 }
 
 /**
