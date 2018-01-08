@@ -84,9 +84,15 @@ exports.runCMD = function (id, cmd, callback) {
     server.on('close',function(code, signal){
       console.log('子进程Close：' + code, signal);
 
-      setTimeout(function () {
-        restart();
-      }, 3000);
+      if (signal == 'SEGTERM') {
+        console.log('正常退出');
+      } else {
+        console.log('非正常退出');
+
+        setTimeout(function () {
+          restart();
+        }, 3000);
+      }
     });
 
     server.on('error',function(code, signal){
