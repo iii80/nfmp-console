@@ -39,7 +39,7 @@ exports.one = function (req, res) {
     return res.status(200).json([]);
   }
 
-  var stream = JSON.parse(data);
+  var stream = JSON.parse(streams);
   var item = _.find(stream, { id: id });
 
   res.status(200).json(item);
