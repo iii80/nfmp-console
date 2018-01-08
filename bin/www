@@ -83,7 +83,7 @@ fs.readFile(path.join(__dirname,'../config/streams.json'), function (err, data) 
     });
   });
 
-  process.on('SIGINT', function(){
+  process.on('exit', function(){
     console.log('lalala');
     process.exit(0);
   });
