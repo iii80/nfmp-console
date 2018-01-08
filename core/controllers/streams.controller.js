@@ -120,7 +120,7 @@ exports.switch = function (req, res) {
 
   setTimeout(function () {
     res.status(204).end();
-  }, 2000)
+  }, 1000)
 };
 
 /**
@@ -417,10 +417,12 @@ exports.update = function (req, res) {
 
       if (oldStream.pid) exec('kill -s 9 ' + oldStream.pid);
 
-      callback(null, {
-        streamsList: streamsList,
-        oldStream: oldStream
-      });
+      setTimeout(function () {
+        callback(null, {
+          streamsList: streamsList,
+          oldStream: oldStream
+        })
+      }, 1000);
     },
     checkDir: ['loadStreams', function (callback, results) {
       if (results.loadStreams.oldStream.name === stream.name) {
@@ -583,14 +585,16 @@ exports.remove = function (req, res) {
 
   if (oldPid) exec('kill -s 9 ' + oldPid);
 
-  rimraf(path.join(__dirname, '../../public/assets/streams/' + oldStream.name), function (err) {
-    if (err) {
-      logger.system().error(__filename, '获取 Stream 失败', err);
-      return res.status(400).end();
-    }
+  setTimeout(function () {
+    rimraf(path.join(__dirname, '../../public/assets/streams/' + oldStream.name), function (err) {
+      if (err) {
+        logger.system().error(__filename, '获取 Stream 失败', err);
+        return res.status(400).end();
+      }
 
-    localStorage.setItem('streams', JSON.stringify(newStreamList));
+      localStorage.setItem('streams', JSON.stringify(newStreamList));
 
-    res.status(204).end();
-  });
+      res.status(204).end();
+    });
+  }, 1000)
 };

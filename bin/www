@@ -96,8 +96,6 @@ app.set('port', port);
             exec('kill -s 9 ' + item.pid);
           }
         });
-
-        console.log('所有子进程已杀死');
     }
 
     console.log('所有子进程已杀死');
