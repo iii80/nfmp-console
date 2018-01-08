@@ -39,7 +39,7 @@ fs.readFile(path.join(__dirname,'../config/streams.json'), function (err, data) 
           streamService.runCMD(item.id, item.cmd);
         }
       });
-    } catch () {}
+    } catch(err) {}
   }
 
   var server = http.createServer(app);
