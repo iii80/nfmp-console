@@ -39,15 +39,22 @@ angular.module('controllers').controller('streams', ['$scope', '$state', '$state
      * 激活关闭
      */
     $scope.switchActive = function (item) {
+      if ($scope.transmitting) return false;
+
       item.active = !item.active;
+      $scope.transmitting = true;
 
       $http.put('/api/streamSwitch', { id: item.id, active: item.active })
         .then(function () {
+          $scope.transmitting = false;
+
           return $scope.$emit('notification', {
             type: 'success',
             message: '激活转码成功'
           });
         }, function () {
+          $scope.transmitting = false;
+
           $scope.$emit('notification', {
             type: 'danger',
             message: '激活转码失败'

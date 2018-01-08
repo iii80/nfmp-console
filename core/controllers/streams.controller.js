@@ -101,70 +101,43 @@ exports.switch = function (req, res) {
     return res.status(400).end();
   }
 
-  var data = fs.readFileSync(path.join(__dirname,'../../config/streams.json'));
+  fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
+    if (err && data) {
+      logger.system().error(__filename, '获取 Stream 失败', err);
+      res.status(400).end();
+      return false;
+    }
 
-  var streamList = JSON.parse(data);
+    var streamList = JSON.parse(data);
 
-  var result = _.find(streamList, { id: req.body.id });
+    var result = _.find(streamList, { id: req.body.id });
 
-  _.pull(streamList, result);
+    _.pull(streamList, result);
 
-  var _pid = result.pid;
+    var _pid = result.pid;
 
-  if (!req.body.active) {
-    result.pid = '';
-  }
-  streamList.push(result);
+    if (!req.body.active) {
+      result.pid = '';
+    }
 
-  fs.writeFileSync(path.join(__dirname,'../../config/streams.json'), JSON.stringify(streamList));
+    streamList.push(result);
 
-  if (req.body.active) {
-    streamService.runCMD(result.id, result.cmd);
-  } else {
-    exec('kill ' + _pid);
-  }
+    fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(streamList), function (err) {
+      if (err) {
+        logger.system().error(__filename, '写入 Stream 失败', err);
+        res.status(400).end();
+        return false;
+      }
 
-  res.status(204).end();
+      if (req.body.active) {
+        streamService.runCMD(result.id, result.cmd);
+      } else {
+        exec('kill ' + _pid);
+      }
 
-
-
-  // fs.readFile(path.join(__dirname,'../../config/streams.json'), function (err, data) {
-  //   if (err && data) {
-  //     logger.system().error(__filename, '获取 Stream 失败', err);
-  //     res.status(400).end();
-  //     return false;
-  //   }
-  //
-  //   var streamList = JSON.parse(data);
-  //
-  //   var result = _.find(streamList, { id: req.body.id });
-  //
-  //   _.pull(streamList, result);
-  //
-  //   var _pid = result.pid;
-  //
-  //   if (!req.body.active) {
-  //     result.pid = '';
-  //   }
-  //
-  //   streamList.push(result);
-  //
-  //   fs.writeFile(path.join(__dirname,'../../config/streams.json'), JSON.stringify(streamList), function (err) {
-  //     if (err) {
-  //       logger.system().error(__filename, '写入 Stream 失败', err);
-  //       res.status(400).end();
-  //       return false;
-  //     }
-  //
-  //     if (req.body.active) {
-  //       streamService.runCMD(result.id, result.cmd);
-  //     } else {
-  //       exec('kill ' + _pid);
-  //     }
-  //
-  //     res.status(204).end();
-  //   });
-  // });
+      res.status(204).end();
+    });
+  });
 };
 
 /**
