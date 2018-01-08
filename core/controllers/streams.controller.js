@@ -538,7 +538,7 @@ exports.update = function (req, res) {
         callback();
         return false;
       }
-console.log(11111111111111111111111111111111111111);
+
       streamService.runCMD(id, results.createCMD);
 
       callback();

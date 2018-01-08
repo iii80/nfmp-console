@@ -70,6 +70,7 @@ exports.runCMD = function (id, cmd, callback) {
     function restart() {
       setTimeout(function () {
         checkActive(id, function (active) {
+          console.log('lalalala');
           if (active) server = startServer(id, cmd);
         });
       }, 3000);
