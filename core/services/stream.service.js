@@ -84,7 +84,7 @@ exports.runCMD = function (id, cmd, callback) {
     server.on('close',function(code, signal){
       console.log('子进程Close：' + code, signal);
 
-      if (signal == 'SEGTERM') {
+      if (!signal) {
         console.log('正常退出');
       } else {
         console.log('非正常退出');
