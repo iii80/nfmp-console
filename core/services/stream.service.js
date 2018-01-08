@@ -96,7 +96,7 @@ exports.runCMD = function (id, cmd, callback) {
 
       setTimeout(function () {
         restart();
-      }, 10000);
+      }, 3000);
     });
   }; startServer();
 };

@@ -115,7 +115,7 @@ exports.switch = function (req, res) {
   if (req.body.active) {
     streamService.runCMD(result.id, result.cmd);
   } else {
-    exec('kill -s 9 ' + _pid);
+    exec('kill -9 ' + _pid);
   }
 
   res.status(204).end();
@@ -413,7 +413,7 @@ exports.update = function (req, res) {
 
       var oldStream = _.find(streamsList, { id: id });
 
-      if (oldStream.pid) exec('kill -s 9 ' + oldStream.pid);
+      if (oldStream.pid) exec('kill -9 ' + oldStream.pid);
 
       callback(null, {
         streamsList: streamsList,
@@ -579,7 +579,7 @@ exports.remove = function (req, res) {
   var oldPid = _.get(oldStream, 'pid');
   var newStreamList = _.reject(streamList, { id: req.params.id });
 
-  if (oldPid) exec('kill -s 9 ' + oldPid);
+  if (oldPid) exec('kill -9 ' + oldPid);
 
   rimraf(path.join(__dirname, '../../public/assets/streams/' + oldStream.name), function (err) {
     if (err) {
