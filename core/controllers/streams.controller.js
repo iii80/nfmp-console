@@ -57,7 +57,7 @@ exports.list = function (req, res) {
     return res.status(200).json([]);
   }
 
-  var streamList = _.sortBy(JSON.parse(data), 'id');
+  var streamList = _.sortBy(JSON.parse(streams), 'id');
 
   res.status(200).json(streamList);
 };
