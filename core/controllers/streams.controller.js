@@ -118,7 +118,9 @@ exports.switch = function (req, res) {
     exec('kill -s 9 ' + _pid);
   }
 
-  res.status(204).end();
+  setTimeout(function () {
+    res.status(204).end();
+  }, 500)
 };
 
 /**
