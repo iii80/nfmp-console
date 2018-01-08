@@ -89,7 +89,7 @@ app.set('port', port);
     var streams = localStorage.getItem('streams');
 
     if (streams) {
-      var streamList = JSON.parse(data);
+      var streamList = JSON.parse(streams);
 
         _.forEach(streamList, function (item) {
           if (item.pid) {
