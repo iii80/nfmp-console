@@ -68,12 +68,9 @@ exports.runCMD = function (id, cmd, callback) {
     writePid(id, server.pid, callback);
 
     function restart() {
-      setTimeout(function () {
-        checkActive(id, function (active) {
-          console.log('lalalala');
-          if (active) server = startServer(id, cmd);
-        });
-      }, 3000);
+      checkActive(id, function (active) {
+        if (active) server = startServer(id, cmd);
+      });
     }
 
     server.stdout.on('data', function (data) {
@@ -87,14 +84,19 @@ exports.runCMD = function (id, cmd, callback) {
     server.on('close',function(code){
       console.log('子进程Close：' + code);
 
-      restart();
+      setTimeout(function () {
+        restart();
+      }, 10000);
     });
 
     server.on('error',function(code, signal){
       console.log('子进程Error：' + code, signal);
 
       server.kill(signal);
-      restart();
+
+      setTimeout(function () {
+        restart();
+      }, 10000);
     });
   }; startServer();
 };
