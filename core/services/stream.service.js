@@ -81,12 +81,12 @@ exports.runCMD = function (id, cmd, callback) {
       console.log(data.toString());
     });
 
-    server.on('close',function(code){
-      console.log('子进程Close：' + code);
+    server.on('close',function(code, signal){
+      console.log('子进程Close：' + code, signal);
 
       setTimeout(function () {
         restart();
-      }, 10000);
+      }, 3000);
     });
 
     server.on('error',function(code, signal){
