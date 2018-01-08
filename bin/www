@@ -30,7 +30,7 @@ fs.readFile(path.join(__dirname,'../config/streams.json'), function (err, data) 
     return false;
   }
 
-  if (data) {
+  if (data || data != '') {
     var streamList = JSON.parse(data);
 
     _.forEach(streamList, function (item) {
