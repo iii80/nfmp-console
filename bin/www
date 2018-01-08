@@ -12,6 +12,7 @@ var path = require('path');
 var async = require('async');
 var port = require('../lib/port.lib.js')();
 var logger = require('../lib/logger.lib');
+var exec = require('child_process').exec;
 var hardware = require('../core/controllers/hardware.controller');
 var streamService = require('../core/services/stream.service');
 
@@ -82,8 +83,29 @@ fs.readFile(path.join(__dirname,'../config/streams.json'), function (err, data) 
       hardware.disconnect();
     });
   });
-});
 
-process.on('SIGTERM', function () { //SIGINT这个信号是系统默认信号，代表信号中断，就是ctrl+c
-  console.log('Got SIGINT.  Press Control-D to exit.');
+  function exit () {
+    console.log('进程退出中');
+    fs.readFile(path.join(__dirname,'../config/streams.json'), function (err, data) {
+      if (err && data) {
+        logger.system().error(__filename, '获取 Stream 失败', err);
+        return false;
+      }
+
+      var streamList = JSON.parse(data);
+
+      _.forEach(streamList, function (item) {
+        if (item.pid) {
+          exec('kill -s 9 ' + item.id);
+        }
+      });
+
+      console.log('所有子进程已杀死');
+
+      process.exit(0);
+    });
+  }
+
+    process.on('SIGINT', exit);
+    process.on('SIGTERM', exit);
 });
