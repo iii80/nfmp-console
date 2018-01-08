@@ -13,6 +13,7 @@ var async = require('async');
 var port = require('../lib/port.lib.js')();
 var logger = require('../lib/logger.lib');
 var exec = require('child_process').exec;
+var localStorage = require('../lib/localStorage');
 var hardware = require('../core/controllers/hardware.controller');
 var streamService = require('../core/services/stream.service');
 
@@ -24,22 +25,17 @@ app.set('port', port);
 /**
  * 创建 HTTP 服务器
  */
-fs.readFile(path.join(__dirname,'../config/streams.json'), function (err, data) {
-  if (err && data) {
-    logger.system().error(__filename, '获取 Stream 失败', err);
-    return false;
-  }
 
-  if (data || data != '') {
-  　try {
-      var streamList = JSON.parse(data);
+  var streams = localStorage.getItem('streams');
 
-      _.forEach(streamList, function (item) {
-        if (item.pid && item.cmd) {
-          streamService.runCMD(item.id, item.cmd);
-        }
-      });
-    } catch(err) {}
+  if (streams) {
+    var streamList = JSON.parse(streams);
+
+    _.forEach(streamList, function (item) {
+      if (item.pid && item.cmd) {
+        streamService.runCMD(item.id, item.cmd);
+      }
+    });
   }
 
   var server = http.createServer(app);
@@ -90,26 +86,25 @@ fs.readFile(path.join(__dirname,'../config/streams.json'), function (err, data) 
 
   function exit () {
     console.log('进程退出中');
-    fs.readFile(path.join(__dirname,'../config/streams.json'), function (err, data) {
-      if (err && data) {
-        logger.system().error(__filename, '获取 Stream 失败', err);
-        return false;
-      }
 
+    var streams = localStorage.getItem('streams');
+
+    if (streams) {
       var streamList = JSON.parse(data);
 
-      _.forEach(streamList, function (item) {
-        if (item.pid) {
-          exec('kill -s 9 ' + item.pid);
-        }
-      });
+        _.forEach(streamList, function (item) {
+          if (item.pid) {
+            exec('kill -s 9 ' + item.pid);
+          }
+        });
 
-      console.log('所有子进程已杀死');
+        console.log('所有子进程已杀死');
+    }
 
-      process.exit(0);
-    });
+    console.log('所有子进程已杀死');
+
+    process.exit(0);
   }
 
-    process.on('SIGINT', exit);
-    process.on('SIGTERM', exit);
-});
+process.on('SIGINT', exit);
+process.on('SIGTERM', exit);
