@@ -16,7 +16,7 @@ function checkActive(id, callback) {
 
   if (!streams) streams = [];
 
-  var streamList = JSON.parse(data);
+  var streamList = JSON.parse(streams);
 
   var result = _.find(streamList, { id: id });
 

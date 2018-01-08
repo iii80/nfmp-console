@@ -96,7 +96,7 @@ exports.switch = function (req, res) {
 
   if (!streams) streams = [];
 
-  var streamList = JSON.parse(data);
+  var streamList = JSON.parse(streams);
 
   var result = _.find(streamList, { id: req.body.id });
 
@@ -409,7 +409,7 @@ exports.update = function (req, res) {
 
       if (!streams) streams = [];
 
-      var streamsList = JSON.parse(data);
+      var streamsList = JSON.parse(streams);
 
       var oldStream = _.find(streamsList, { id: id });
 
@@ -574,7 +574,7 @@ exports.remove = function (req, res) {
 
   if (!streams) streams = [];
 
-  var streamList = JSON.parse(data);
+  var streamList = JSON.parse(streams);
   var oldStream = _.find(streamList, { id: req.params.id });
   var oldPid = _.get(oldStream, 'pid');
   var newStreamList = _.reject(streamList, { id: req.params.id });
