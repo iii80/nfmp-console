@@ -120,7 +120,7 @@ exports.switch = function (req, res) {
 
   setTimeout(function () {
     res.status(204).end();
-  }, 3000)
+  }, 1000)
 };
 
 /**
