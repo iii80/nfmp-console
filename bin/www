@@ -31,13 +31,15 @@ fs.readFile(path.join(__dirname,'../config/streams.json'), function (err, data) 
   }
 
   if (data || data != '') {
-    var streamList = JSON.parse(data);
+  　try {
+      var streamList = JSON.parse(data);
 
-    _.forEach(streamList, function (item) {
-      if (item.pid && item.cmd) {
-        streamService.runCMD(item.id, item.cmd);
-      }
-    });
+      _.forEach(streamList, function (item) {
+        if (item.pid && item.cmd) {
+          streamService.runCMD(item.id, item.cmd);
+        }
+      });
+    }
   }
 
   var server = http.createServer(app);
