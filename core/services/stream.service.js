@@ -1,6 +1,7 @@
 var path = require('path');
 var _ = require('lodash');
-var spawn = require('child_process').spawn;
+// var spawn = require('child_process').spawn;
+var spawn = require('cross-spawn');
 var server = null;
 var localStorage = require('../../lib/localStorage.lib');
 
