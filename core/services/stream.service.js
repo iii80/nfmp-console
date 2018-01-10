@@ -73,13 +73,13 @@ exports.runCMD = function (id, cmd, callback) {
       });
     }
 
-    server.stdout.on('data', function (data) {
-      console.log(data.toString());
-    });
-
-    server.stderr.on('data', function (data) {
-      console.log(data.toString());
-    });
+    // server.stdout.on('data', function (data) {
+    //   console.log(data.toString());
+    // });
+    //
+    // server.stderr.on('data', function (data) {
+    //   console.log(data.toString());
+    // });
 
     server.on('close',function(code, signal){
       console.log('子进程Close：' + code, signal);
