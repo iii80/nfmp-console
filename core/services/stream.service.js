@@ -64,6 +64,7 @@ exports.runCMD = function (id, cmd, callback) {
 
   function startServer() {
     server = spawn(cmd[0], cmd[1]);
+    console.log(server.spawnargs);
     console.log(server);
     writePid(id, server.pid, callback);
 
