@@ -64,7 +64,9 @@ exports.runCMD = function (id, cmd, callback) {
 
   function startServer() {
     server = spawn(cmd[0], cmd[1]);
-    console.log(server.spawnargs);
+
+    // console.log(server.spawnargs);
+
     writePid(id, server.pid, callback);
 
     function restart() {
@@ -73,13 +75,13 @@ exports.runCMD = function (id, cmd, callback) {
       });
     }
 
-    server.stdout.on('data', function (data) {
-      console.log(data.toString());
-    });
-
-    server.stderr.on('data', function (data) {
-      console.log(data.toString());
-    });
+    // server.stdout.on('data', function (data) {
+    //   console.log(data.toString());
+    // });
+    //
+    // server.stderr.on('data', function (data) {
+    //   console.log(data.toString());
+    // });
 
     server.on('close',function(code, signal){
       console.log('子进程Close：' + code, signal);
