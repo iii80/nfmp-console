@@ -11,6 +11,46 @@ var streamService = require('../services/stream.service');
 var switchStates = false;
 
 /**
+ * CMD
+ * @param {Array} option
+ * @return {Array} cmd
+ */
+function createCMD (option) {
+  var reg = /^(\w+)\:\/\//;
+  var pre = _.get(stream.url.match(reg), [1]);
+
+  var startCMD = [];
+
+  if (pre === 'rtsp') {
+    startCMD = ['-rtsp_transport', 'tcp', '-i'];
+  } else {
+    startCMD = ['-i'];
+  }
+
+  var normal = [];
+
+  if (option.inNetwork) {
+    normal = startCMD.concat([option.url + '?source=' + option.inNetwork]);
+  } else {
+    normal = startCMD.concat(['-i', option.url]);
+  }
+
+  var cmd = [];
+
+  if (option.muhicast && !option.hls) {
+    cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', option.outUrl + '?localaddr=' + option.address + '&pkt_size=1316&buffer_size=65535'])];
+  } else if (!option.muhicast && option.hls) {
+    cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '5', '-hls_wrap', '5', '-hls_time', '10', path.join(__dirname, '../../public/assets/streams/' + option.name  + '/1.m3u8')])];
+  } else if (option.muhicast && option.hls) {
+    cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '5', '-hls_wrap', '5', '-hls_time', '10', path.join(__dirname, '../../public/assets/streams/' + option.name  + '/1.m3u8'), '-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', option.outUrl + '?localaddr=' + option.address + '&pkt_size=1316&buffer_size=65535'])];
+  } else if (!option.muhicast && !option.hls) {
+    cmd = null;
+  }
+
+  return cmd;
+}
+
+/**
  * 转码信息
  * @param {Object} req
  *        {Object} req.body.id
@@ -229,31 +269,15 @@ exports.create = function (req, res) {
       });
     },
     createCMD: ['mkdir', 'getNetwork', function (callback, results) {
-      var normal = [];
-
-      // if (stream.inNetwork) {
-      //   normal = ['-i', '"' + stream.url + '?source=' + stream.inNetwork  + '"'];
-      // } else {
-      //   normal = ['-i', '"' + stream.url + '"'];
-      // }
-
-      if (stream.inNetwork) {
-        normal = ['-i', stream.url + '?source=' + stream.inNetwork];
-      } else {
-        normal = ['-i', stream.url];
-      }
-
-      var cmd = [];
-
-      if (stream.muhicast && !stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', stream.outUrl + '?localaddr=' + results.getNetwork.address + '&pkt_size=1316&buffer_size=65535'])];
-      } else if (!stream.muhicast && stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '5', '-hls_wrap', '5', '-hls_time', '10', path.join(__dirname, '../../public/assets/streams/' + stream.name  + '/1.m3u8')])];
-      } else if (stream.muhicast && stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '5', '-hls_wrap', '5', '-hls_time', '10', path.join(__dirname, '../../public/assets/streams/' + stream.name  + '/1.m3u8'), '-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', stream.outUrl + '?localaddr=' + results.getNetwork.address + '&pkt_size=1316&buffer_size=65535'])];
-      } else if (!stream.muhicast && !stream.hls) {
-        cmd = null;
-      }
+      var cmd = createCMD({
+        inNetwork: stream.inNetwork || '',
+        url: stream.url || '',
+        muhicast: stream.muhicast || '',
+        hls: stream.hls || '',
+        outUrl: stream.outUrl || '',
+        address: results.getNetwork.address || '',
+        name: stream.name || ''
+      });
 
       callback(null, cmd);
     }],
@@ -459,31 +483,15 @@ exports.update = function (req, res) {
       });
     },
     createCMD: ['checkDir', 'getNetwork', function (callback, results) {
-      var normal = [];
-
-      // if (stream.inNetwork) {
-      //   normal = ['-i', '"' + stream.url + '?source=' + stream.inNetwork  + '"'];
-      // } else {
-      //   normal = ['-i', '"' + stream.url + '"'];
-      // }
-
-      if (stream.inNetwork) {
-        normal = ['-i', stream.url + '?source=' + stream.inNetwork];
-      } else {
-        normal = ['-i', stream.url];
-      }
-
-      var cmd = [];
-
-      if (stream.muhicast && !stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', stream.outUrl + '?localaddr=' + results.getNetwork.address + '&pkt_size=1316&buffer_size=65535'])];
-      } else if (!stream.muhicast && stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '5', '-hls_wrap', '5', '-hls_time', '10', path.join(__dirname, '../../public/assets/streams/' + stream.name  + '/1.m3u8')])];
-      } else if (stream.muhicast && stream.hls) {
-        cmd = ['ffmpeg', normal.concat(['-vcodec', 'copy', '-acodec', 'copy', '-f', 'hls', '-hls_list_size', '5', '-hls_wrap', '5', '-hls_time', '10', path.join(__dirname, '../../public/assets/streams/' + stream.name  + '/1.m3u8'), '-vcodec', 'copy', '-acodec', 'copy', '-f', 'mpegts', stream.outUrl + '?localaddr=' + results.getNetwork.address + '&pkt_size=1316&buffer_size=65535'])];
-      } else if (!stream.muhicast && !stream.hls) {
-        cmd = null;
-      }
+      var cmd = createCMD({
+        inNetwork: stream.inNetwork || '',
+        url: stream.url || '',
+        muhicast: stream.muhicast || '',
+        hls: stream.hls || '',
+        outUrl: stream.outUrl || '',
+        address: results.getNetwork.address || '',
+        name: stream.name || ''
+      });
 
       callback(null, cmd);
     }],
