@@ -270,13 +270,13 @@ exports.create = function (req, res) {
     },
     createCMD: ['mkdir', 'getNetwork', function (callback, results) {
       var cmd = createCMD({
-        inNetwork: stream.inNetwork || '',
-        url: stream.url || '',
-        muhicast: stream.muhicast || '',
-        hls: stream.hls || '',
-        outUrl: stream.outUrl || '',
-        address: results.getNetwork.address || '',
-        name: stream.name || ''
+        inNetwork: _.get(stream, 'inNetwork', ''),
+        url: _.get(stream, 'url', ''),
+        muhicast: _.get(stream, 'muhicast', ''),
+        hls: _.get(stream, 'hls', ''),
+        outUrl: _.get(stream, 'outUrl', ''),
+        address: _.get(results, 'getNetwork.address', ''),
+        name: _.get(stream, 'name', '')
       });
 
       callback(null, cmd);
