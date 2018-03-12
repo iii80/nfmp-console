@@ -17,7 +17,10 @@ var switchStates = false;
  */
 function createCMD (option) {
   var reg = /^(\w+)\:\/\//;
-  var pre = _.get(option, url.match(reg), [1]);
+
+  option = option || {};
+
+  var pre = _.get(_.get(option, 'url', '').match(reg), [1]);
 
   var startCMD = [];
 
